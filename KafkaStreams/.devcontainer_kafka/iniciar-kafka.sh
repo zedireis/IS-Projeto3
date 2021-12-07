@@ -15,6 +15,10 @@ opt/kafka_2.12-2.8.1/bin/iniciar-dbconnection.sh &
 #ZSH
 zsh &
 
+while [ true ]; do
+    sleep 30
+done
+
 # Wait for any process to exit
 wait -n
 # Exit with status of process that exited first

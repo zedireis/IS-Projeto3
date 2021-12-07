@@ -42,7 +42,7 @@ public class Client {
             producer.send(new ProducerRecord<String, Long>(paymentsTopic, Integer.toString(payment), (long) payment));
             System.out.println("Sending message " + payment + " to topic " + paymentsTopic);
 
-            Thread.sleep(10000);
+            Thread.sleep(30000);
         }
 
     }

@@ -61,7 +61,7 @@ ENV ZSH_THEME robbyrussell
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # start zsh
-CMD [ "zsh" ]
+#CMD [ "zsh" ]
 
 #TESTE
 #RUN mkdir /opt/kafka_2.12-2.8.1/data
@@ -81,6 +81,5 @@ ADD --chmod=0777 iniciar-dbconnection.sh /opt/kafka_2.12-2.8.1/bin
 RUN find /tmp -type d -name 'kafka-logs' -exec rm -r {} +
 
 ADD --chmod=0755 iniciar-kafka.sh /opt/kafka_2.12-2.8.1/bin
-
 
 ENTRYPOINT [ "/opt/kafka_2.12-2.8.1/bin/iniciar-kafka.sh" ]
