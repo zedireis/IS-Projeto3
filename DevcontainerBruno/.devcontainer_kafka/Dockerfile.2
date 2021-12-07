@@ -1,0 +1,87 @@
+FROM maven:3-openjdk-16
+
+#From https://gist.github.com/MichalZalecki/4a87880bbe7a3a5428b5aebebaa5cd97
+ARG USER_NAME="main"
+ARG USER_PASSWORD="main"
+
+ENV USER_NAME $USER_NAME
+ENV USER_PASSWORD $USER_PASSWORD
+ENV CONTAINER_IMAGE_VER=v1.0.0
+
+RUN echo $USER_NAME
+RUN echo $USER_PASSWORD
+RUN echo $CONTAINER_IMAGE_VER
+
+USER root
+
+RUN set -eux \
+ && microdnf install curl \
+  git-core \
+  less \
+  passwd \
+  sudo \
+  vim \
+  wget \
+  zip \
+  zsh \
+  && microdnf clean all \
+  # add a user (--disabled-password: the user won't be able to use the account until the password is set)
+  && adduser -p ${USER_PASSWORD} --shell /bin/zsh --home /home/$USER_NAME -c "User" ${USER_NAME} \
+  # update the password
+  && echo ${USER_NAME}:${USER_PASSWORD} | chpasswd \
+  && usermod -aG wheel ${USER_NAME}
+
+# install Kafka
+RUN curl -O https://archive.apache.org/dist/kafka/2.8.1/kafka_2.12-2.8.1.tgz
+RUN tar -xzf kafka_2.12-2.8.1.tgz
+RUN mv kafka_2.12-2.8.1 /opt/
+RUN chown -R ${USER_NAME}.${USER_NAME} /opt/kafka_2.12-2.8.1/
+RUN rm kafka_2.12-2.8.1.tgz
+
+# jdbc
+ADD --chmod=0777 kafka-connect-jdbc-10.2.5.jar /opt/kafka_2.12-2.8.1/libs
+ADD --chmod=0777 postgresql-42.2.19.jar /opt/kafka_2.12-2.8.1/libs
+
+
+# install jax-ws (wsimport.sh)
+RUN curl -LO https://repo1.maven.org/maven2/com/sun/xml/ws/jaxws-ri/3.0.2/jaxws-ri-3.0.2.zip \
+  && unzip jaxws-ri-3.0.2.zip
+ENV PATH="/jaxws-ri/bin/:${PATH}"
+
+
+# the user we're applying this too (otherwise it most likely install for root)
+USER $USER_NAME
+# terminal colors with xterm
+ENV TERM xterm
+# set the zsh theme
+ENV ZSH_THEME robbyrussell
+
+# run the installation script  
+#  RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
+RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# start zsh
+# CMD [ "zsh" ]
+
+#TESTE
+#RUN mkdir /opt/kafka_2.12-2.8.1/data
+#RUN mkdir /opt/kafka_2.12-2.8.1/data/zookeeper
+#RUN mkdir /opt/kafka_2.12-2.8.1/data/kafka
+#ADD --chmod=0755 server.properties /opt/kafka_2.12-2.8.1/config
+#ADD --chmod=0755 zookeeper.properties /opt/kafka_2.12-2.8.1/config
+
+#Configurar connectors
+ADD --chmod=0755 connect-jdbc-source-filipe.properties /opt/kafka_2.12-2.8.1/config
+ADD --chmod=0755 connect-jdbc-sink-filipe.properties /opt/kafka_2.12-2.8.1/config
+
+ADD --chmod=0777 iniciar-dbconnection.sh /opt/kafka_2.12-2.8.1/bin
+
+#CMD [ "/opt/kafka_2.12-2.8.1/bin/iniciar-dbconnection.sh" ]
+
+#Iniciar zookeeper e server
+RUN find /tmp -type d -name 'kafka-logs' -exec rm -r {} +
+
+ADD --chmod=0755 iniciar-kafka.sh /opt/kafka_2.12-2.8.1/bin
+
+CMD [ "/opt/kafka_2.12-2.8.1/bin/iniciar-kafka.sh" ]
+ENTRYPOINT [ "/opt/kafka_2.12-2.8.1/bin/iniciar-kafka.sh" ]
