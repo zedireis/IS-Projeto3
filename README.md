@@ -7,14 +7,18 @@
 
 #Topicos do Cliente
 
-		java -jar messaging/target/messaging.jar mytopic
-
-		java -cp messaging/target/messaging.jar kafka.SimpleProducer mytopic
+		java -cp messaging/target/messaging.jar kafka.Client creditsTopic paymentsTopic
 
 #Kafka Streams
 
-		java -cp messaging/target/messaging.jar streams.SimpleStreamsExercisesb kstreamstopic resultstopic
+		java -cp messaging/target/messaging.jar streams.KafkaStreams paymentsTopic resultsTopic
 
-#Topicos Result
+--------- COMANDOS DEBUG ----------
 
-		/opt/kafka_2.12-2.8.1/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic project3toDB
+Enviar um comando para a base de dados
+
+		/opt/kafka_2.12-2.8.1/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic resultsTopic
+		
+Ver o que tem a base de dados
+
+		/opt/kafka_2.12-2.8.1/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic dbinfoTopic --from-beginning
