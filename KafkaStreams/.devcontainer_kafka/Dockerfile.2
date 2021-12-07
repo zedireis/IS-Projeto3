@@ -38,10 +38,16 @@ RUN mv kafka_2.12-2.8.1 /opt/
 RUN chown -R ${USER_NAME}.${USER_NAME} /opt/kafka_2.12-2.8.1/
 RUN rm kafka_2.12-2.8.1.tgz
 
+# jdbc
+ADD --chmod=0777 kafka-connect-jdbc-10.2.5.jar /opt/kafka_2.12-2.8.1/libs
+ADD --chmod=0777 postgresql-42.2.19.jar /opt/kafka_2.12-2.8.1/libs
+
+
 # install jax-ws (wsimport.sh)
 RUN curl -LO https://repo1.maven.org/maven2/com/sun/xml/ws/jaxws-ri/3.0.2/jaxws-ri-3.0.2.zip \
   && unzip jaxws-ri-3.0.2.zip
 ENV PATH="/jaxws-ri/bin/:${PATH}"
+
 
 # the user we're applying this too (otherwise it most likely install for root)
 USER $USER_NAME
@@ -64,8 +70,17 @@ CMD [ "zsh" ]
 #ADD --chmod=0755 server.properties /opt/kafka_2.12-2.8.1/config
 #ADD --chmod=0755 zookeeper.properties /opt/kafka_2.12-2.8.1/config
 
+#Configurar connectors
+ADD --chmod=0755 connect-jdbc-source-filipe.properties /opt/kafka_2.12-2.8.1/config
+ADD --chmod=0755 connect-jdbc-sink-filipe.properties /opt/kafka_2.12-2.8.1/config
+
+ADD --chmod=0777 iniciar-dbconnection.sh /opt/kafka_2.12-2.8.1/bin
+
+
+#Iniciar zookeeper e server
 RUN find /tmp -type d -name 'kafka-logs' -exec rm -r {} +
 
 ADD --chmod=0755 iniciar-kafka.sh /opt/kafka_2.12-2.8.1/bin
+
 
 ENTRYPOINT [ "/opt/kafka_2.12-2.8.1/bin/iniciar-kafka.sh" ]
