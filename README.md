@@ -25,7 +25,7 @@ Ver o que tem a base de dados
 		
 Dar debug ao paymentsTopic
 
-		java -jar target/KafkaStreams.jar paymentsTopic
+		java -jar messaging/target/messaging.jar paymentsTopic
 		
 		java -cp messaging/target/messaging.jar kafka.Client creditsTopic paymentsTopic
 
