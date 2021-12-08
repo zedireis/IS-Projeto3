@@ -38,3 +38,13 @@ Dar debug ao resultsTopic
 		java -cp messaging/target/messaging.jar kafka.Client creditsTopic paymentstopic
 		
 	Se não der troca-se a ordem dos dois últimos comandos
+	
+Eliminar um tópico
+
+		/opt/kafka_2.12-2.8.1/bin/kafka-topics.sh --delete --zookeeper localhost:2181 --topic resultstopic
+		
+Reiniciar sink
+
+		curl -X POST http://localhost:8083/connectors/jdbc-sink-filipe/tasks/0/restart
+
+
