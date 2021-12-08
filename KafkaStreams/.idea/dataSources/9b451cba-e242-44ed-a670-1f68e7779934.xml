@@ -1380,7 +1380,7 @@ false posix/WET
 false posix/Zulu
 false posixrules
 </TimeZones>
-      <StartupTime>1638920349</StartupTime>
+      <StartupTime>1638996877</StartupTime>
     </root>
     <database id="2" parent="1" name="postgres">
       <ObjectId>13445</ObjectId>
@@ -1390,8 +1390,10 @@ false posixrules
     <database id="3" parent="1" name="project3">
       <ObjectId>16386</ObjectId>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>494</IntrospectionStateNumber>
+      <IntrospectionStateNumber>635</IntrospectionStateNumber>
       <Current>1</Current>
+      <Relations>sequence|table|16497|16499|1
+</Relations>
     </database>
     <database id="4" parent="1" name="projeto3">
       <ObjectId>16385</ObjectId>
@@ -1469,7 +1471,7 @@ UC/10
 </Acl>
       <StateNumber>287</StateNumber>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>495</IntrospectionStateNumber>
+      <IntrospectionStateNumber>636</IntrospectionStateNumber>
       <Current>1</Current>
     </schema>
     <extension id="20" parent="3" name="plpgsql">
@@ -1569,31 +1571,84 @@ UC/10
       <HandlerId>335</HandlerId>
       <Type>index</Type>
     </access-method>
-    <table id="32" parent="19" name="project3toDB">
-      <ObjectId>16387</ObjectId>
+    <sequence id="32" parent="19" name="client_id_seq">
+      <ObjectId>16497</ObjectId>
       <Owner>postgres</Owner>
-      <StateNumber>489</StateNumber>
+      <StateNumber>629</StateNumber>
+      <DataType>integer|0s</DataType>
+    </sequence>
+    <table id="33" parent="19" name="client">
+      <ObjectId>16499</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>631</StateNumber>
     </table>
-    <column id="33" parent="32" name="revenue">
+    <table id="34" parent="19" name="resultstopic">
+      <ObjectId>16508</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>631</StateNumber>
+    </table>
+    <column id="35" parent="33" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>629</StateNumber>
+      <DefaultExpression>nextval(&apos;client_id_seq&apos;::regclass)</DefaultExpression>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="36" parent="33" name="nome">
+      <Position>2</Position>
+      <DataType>varchar(512)|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>629</StateNumber>
+      <TypeId>1043</TypeId>
+    </column>
+    <index id="37" parent="33" name="client_pkey">
+      <ObjectId>16506</ObjectId>
+      <StateNumber>629</StateNumber>
+      <ColNames>id</ColNames>
+      <Unique>1</Unique>
+      <Primary>1</Primary>
+      <AccessMethodId>403</AccessMethodId>
+      <CollationIds>0</CollationIds>
+      <ClassIds>1978</ClassIds>
+    </index>
+    <key id="38" parent="33" name="client_pkey">
+      <ObjectId>16507</ObjectId>
+      <StateNumber>629</StateNumber>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>client_pkey</UnderlyingIndexName>
+    </key>
+    <column id="39" parent="34" name="amount">
       <Position>1</Position>
       <DataType>double precision|0s</DataType>
       <NotNull>1</NotNull>
-      <StateNumber>489</StateNumber>
+      <StateNumber>630</StateNumber>
       <TypeId>701</TypeId>
     </column>
-    <column id="34" parent="32" name="expenses">
+    <column id="40" parent="34" name="currency">
       <Position>2</Position>
-      <DataType>double precision|0s</DataType>
+      <DataType>varchar(50)|0s</DataType>
       <NotNull>1</NotNull>
-      <StateNumber>489</StateNumber>
-      <TypeId>701</TypeId>
+      <StateNumber>630</StateNumber>
+      <TypeId>1043</TypeId>
     </column>
-    <column id="35" parent="32" name="profit">
+    <column id="41" parent="34" name="client_id">
       <Position>3</Position>
-      <DataType>double precision|0s</DataType>
+      <DataType>bigint|0s</DataType>
       <NotNull>1</NotNull>
-      <StateNumber>489</StateNumber>
-      <TypeId>701</TypeId>
+      <StateNumber>630</StateNumber>
+      <TypeId>20</TypeId>
     </column>
+    <foreign-key id="42" parent="34" name="resultstopic_fk1">
+      <ObjectId>16511</ObjectId>
+      <StateNumber>631</StateNumber>
+      <ColNames>client_id</ColNames>
+      <RefTableId>16499</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>client</RefTableName>
+      <RefKeyName>client_pkey</RefKeyName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
   </database-model>
 </dataSource>
