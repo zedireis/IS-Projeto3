@@ -27,7 +27,7 @@ public class KafkaStreams {
         StreamsBuilder builder = new StreamsBuilder();
         KStream<String, Long> lines = builder.stream(topicName);
         KTable<String, Long> outlines = lines.groupByKey().count();
-        outlines.mapValues(v -> "" + v).toStream().to(outtopicname,
+        outlines.mapValues((k, v) -> k + " => " + v).toStream().to(outtopicname,
                 Produced.with(Serdes.String(), Serdes.String()));
         org.apache.kafka.streams.KafkaStreams streams = new org.apache.kafka.streams.KafkaStreams(builder.build(), props);
         streams.start();

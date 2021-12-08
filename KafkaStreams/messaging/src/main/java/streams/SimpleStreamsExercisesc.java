@@ -1,5 +1,5 @@
-
 package streams;
+
 import java.io.IOException;
 import java.util.Properties;
 import org.apache.kafka.common.serialization.Serdes;
@@ -14,6 +14,7 @@ import org.apache.kafka.streams.kstream.Produced;
 import org.apache.kafka.streams.state.KeyValueIterator;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
+
 public class SimpleStreamsExercisesc {
     private static final String tablename = "exercises";
     public static void main(String[] args) throws InterruptedException, IOException {

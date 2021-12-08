@@ -1,4 +1,6 @@
 package kafka;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -10,6 +12,8 @@ public class Client {
 
     public static void main(String[] args) throws Exception{
         Random rand = new Random();
+
+        List<String> clients = Arrays.asList("Nelso", "Pedro", "Ze", "Bruno");
 
 //Assign topicName to string variable
         String creditsTopic = args[0].toString();
@@ -34,13 +38,14 @@ public class Client {
 
         while(true){
             // Generate random integers in range 0 to 999
+            int randomIndex = rand.nextInt(clients.size());
             int credit = rand.nextInt(1000);
             int payment = rand.nextInt(1000);
 
             //producer.send(new ProducerRecord<String, Long>(creditsTopic, Integer.toString(credit), (long) credit));
             //System.out.println("Sending message " + credit + " to topic " + creditsTopic);
-            producer.send(new ProducerRecord<String, Long>(paymentsTopic, Integer.toString(payment), (long) payment));
-            System.out.println("Sending message " + payment + " to topic " + paymentsTopic);
+            producer.send(new ProducerRecord<String, Long>(paymentsTopic, clients.get(randomIndex), (long) payment));
+            System.out.println("Sending message " + clients.get(randomIndex) + " made a payment:" + payment + " to topic " + paymentsTopic);
 
             Thread.sleep(30000);
         }
