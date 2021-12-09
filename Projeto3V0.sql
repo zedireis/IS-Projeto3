@@ -37,9 +37,10 @@ CREATE TABLE last_month_bill (
 );
 
 CREATE TABLE currency (
-	name	 VARCHAR(50),
+	id	 SERIAL,
+	name	 VARCHAR(50) UNIQUE,
 	conversion DOUBLE PRECISION NOT NULL,
-	PRIMARY KEY(name)
+	PRIMARY KEY(id)
 );
 
 ALTER TABLE client_payments ADD CONSTRAINT client_payments_fk1 FOREIGN KEY (client_id) REFERENCES client(id);
