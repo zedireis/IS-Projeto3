@@ -26,10 +26,14 @@ public class Teste {
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.Long().getClass());
         StreamsBuilder builder = new StreamsBuilder();
         KStream<String, Long> lines = builder.stream(topicName);
+
         KTable<String, Long> outlines = lines.groupByKey().count();
         outlines.mapValues((k, v) -> "{\"schema\":{\"type\":\"struct\",\"fields\":[{\"type\":\"double\",\"optional\":false,\"field\":\"revenue\"},{\"type\":\"double\",\"optional\":false,\"field\":\"expenses\"},{\"type\":\"double\",\"optional\":false,\"field\":\"profit\"}],\"optional\":false,\"name\":\"total data\"},\"payload\":{\"revenue\":1.0, \"expenses\":\"" + k + "\",\"profit\":\"" + v.toString() + "\"}}"
         ).toStream().to(outtopicname,
                 Produced.with(Serdes.String(), Serdes.String()));
+
+
+
         org.apache.kafka.streams.KafkaStreams streams = new org.apache.kafka.streams.KafkaStreams(builder.build(), props);
         streams.start();
     }
