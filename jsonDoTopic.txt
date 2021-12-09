@@ -1,1 +1,0 @@
-{"schema":{"type":"struct","fields":[{"type":"double","optional":false,"field":"amount"},{"type":"string","optional":false,"field":"currency"},{"type":"int64","optional":false,"field":"client_id"}],"optional":false},"payload":{"amount":20.0,"currency":"EUR","client_id":1}}
