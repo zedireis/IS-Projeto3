@@ -47,3 +47,8 @@ ALTER TABLE client_credits ADD CONSTRAINT client_credits_fk1 FOREIGN KEY (client
 ALTER TABLE balance ADD CONSTRAINT balance_fk1 FOREIGN KEY (client_id) REFERENCES client(id);
 ALTER TABLE last_month_bill ADD CONSTRAINT last_month_bill_fk1 FOREIGN KEY (client_id) REFERENCES client(id);
 
+-- POPULAR BD
+
+INSERT INTO "client" ("nome") VALUES ('Nelso');
+INSERT INTO "public"."client_payments" ("amount", "client_id") VALUES ('20.10', '1');
+
