@@ -133,7 +133,7 @@ public class Client {
                         .toString();
                 producer.send(new ProducerRecord<String, String>(creditsTopic, clients_list.get(randomIndexClients), jsonStringCredit));
 
-                System.out.println("Sending message " + clients_list.get(randomIndexClients) + " made a credit:" + newPayment + " "+ currency_list.get(randomIndexCurrencies) + " to topic " + creditsTopic);
+                System.out.println("Sending message " + clients_list.get(randomIndexClients) + " made a credit:" + newCredit + " "+ currency_list.get(randomIndexCurrencies) + " to topic " + creditsTopic);
 
                 Thread.sleep(30000);
             }else{
