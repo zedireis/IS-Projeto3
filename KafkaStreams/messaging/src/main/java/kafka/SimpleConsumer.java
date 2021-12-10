@@ -30,7 +30,7 @@ public class SimpleConsumer {
         props.put("key.deserializer",
                 "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer",
-                "org.apache.kafka.common.serialization.LongDeserializer");
+                "org.apache.kafka.common.serialization.StringDeserializer");
         Consumer<String, Long> consumer = new KafkaConsumer<>(props);
         consumer.subscribe(Collections.singletonList(topicName));
         while (true) {

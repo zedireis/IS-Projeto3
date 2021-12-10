@@ -31,6 +31,11 @@ RUN set -eux \
   && echo ${USER_NAME}:${USER_PASSWORD} | chpasswd \
   && usermod -aG wheel ${USER_NAME}
 
+#Eliminar logs
+RUN find /tmp/ -type d -name 'kafka-logs' -exec rm -r {} +
+RUN find /tmp/ -type d -name 'zookeeper' -exec rm -r {} +
+RUN find /tmp/ -type d -name 'kafka-streams' -exec rm -r {} +
+
 # install Kafka
 RUN curl -O https://archive.apache.org/dist/kafka/2.8.1/kafka_2.12-2.8.1.tgz
 RUN tar -xzf kafka_2.12-2.8.1.tgz
@@ -75,12 +80,8 @@ ADD --chmod=0755 connect-jdbc-source-clientes.properties /opt/kafka_2.12-2.8.1/c
 ADD --chmod=0755 connect-jdbc-source-currencies.properties /opt/kafka_2.12-2.8.1/config
 ADD --chmod=0755 connect-jdbc-sink-filipe.properties /opt/kafka_2.12-2.8.1/config
 
-ADD --chmod=0777 iniciar-dbconnection.sh /opt/kafka_2.12-2.8.1/bin
-
-
 #Iniciar zookeeper e server
-RUN find /tmp -type d -name 'kafka-logs' -exec rm -r {} +
-
-ADD --chmod=0755 iniciar-kafka.sh /opt/kafka_2.12-2.8.1/bin
+ADD --chmod=0777 iniciar-dbconnection.sh /opt/kafka_2.12-2.8.1/bin
+ADD --chmod=0777 iniciar-kafka.sh /opt/kafka_2.12-2.8.1/bin
 
 ENTRYPOINT [ "/opt/kafka_2.12-2.8.1/bin/iniciar-kafka.sh" ]
