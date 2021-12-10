@@ -63,6 +63,8 @@ Inserir dados
 	INSERT INTO currency (name, conversion) VALUES ('CZK', 0.039);
 	INSERT INTO currency (name, conversion) VALUES ('MXN', 0.042);
 
-	INSERT INTO client (nome, email) VALUES ('Nelso','nelso@email.com');
-	INSERT INTO client (nome, email) VALUES ('Gervasio','gervasio@email.com');
+	INSERT INTO manager (nome, email) VALUES ('Nelso','nelso@email.com');
+
+	INSERT INTO client (nome, email,manager_email) VALUES ('Gervasio','gervasio@email.com','nelso@email.com');
+	INSERT INTO client (nome, email,manager_email) VALUES ('Tiburcio','tiburcio@email.com','nelso@email.com');
 	
