@@ -42,6 +42,10 @@ Dar debug ao resultsTopic
 Eliminar um tópico
 
 	/opt/kafka_2.12-2.8.1/bin/kafka-topics.sh --delete --zookeeper localhost:2181 --topic resultstopic
+	
+Eliminar tópicos
+
+	/workspace/.devcontainer_kafka/reset-topics.sh
 		
 Reiniciar sink
 
