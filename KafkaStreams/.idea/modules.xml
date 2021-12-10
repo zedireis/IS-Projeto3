@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/KafkaStreams.iml" filepath="$PROJECT_DIR$/KafkaStreams.iml" />
       <module fileurl="file://$PROJECT_DIR$/ear/ear.iml" filepath="$PROJECT_DIR$/ear/ear.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jpa/jpa.iml" filepath="$PROJECT_DIR$/jpa/jpa.iml" />
       <module fileurl="file://$PROJECT_DIR$/messaging/messaging.iml" filepath="$PROJECT_DIR$/messaging/messaging.iml" />
       <module fileurl="file://$PROJECT_DIR$/web/web.iml" filepath="$PROJECT_DIR$/web/web.iml" />
     </modules>

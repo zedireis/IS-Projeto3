@@ -12,6 +12,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
         <module>web</module>
         <module>ear</module>
         <module>messaging</module>
+        <module>jpa</module>
     </modules>
     <name>KafkaStreams</name>
   <description>A simple KafkaStreams.</description>
