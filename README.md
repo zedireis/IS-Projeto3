@@ -42,6 +42,10 @@ Dar debug ao resultsTopic
 Eliminar um tópico
 
 	/opt/kafka_2.12-2.8.1/bin/kafka-topics.sh --delete --zookeeper localhost:2181 --topic resultstopic
+	
+Eliminar tópicos
+
+	/workspace/.devcontainer_kafka/reset-topics.sh
 		
 Reiniciar sink
 
@@ -62,7 +66,9 @@ Inserir dados
 	INSERT INTO currency (name, conversion) VALUES ('AUD', 0.63);
 	INSERT INTO currency (name, conversion) VALUES ('CZK', 0.039);
 	INSERT INTO currency (name, conversion) VALUES ('MXN', 0.042);
-	INSERT INTO currency (name, conversion) VALUES ('MXN', 0.098);
 
-	INSERT INTO client (nome, email) VALUES ('Nelso','nelso@email.com');
+	INSERT INTO manager (nome, email) VALUES ('Nelso','nelso@email.com');
+
+	INSERT INTO client (nome, email,manager_email) VALUES ('Gervasio','gervasio@email.com','nelso@email.com');
+	INSERT INTO client (nome, email,manager_email) VALUES ('Tiburcio','tiburcio@email.com','nelso@email.com');
 	
