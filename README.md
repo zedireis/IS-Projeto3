@@ -50,3 +50,19 @@ Reiniciar sink
 Ver status
 
 	curl localhost:8083/connectors/jdbc-sink-filipe/status
+
+Inserir dados
+
+	INSERT INTO currency (id, name, conversion) VALUES (1, 'USD', 0.89);
+	INSERT INTO currency (id, name, conversion) VALUES (2, 'GBP', 1.17);
+	INSERT INTO currency (id, name, conversion) VALUES (2, 'CHF', 0.96);
+	INSERT INTO currency (id, name, conversion) VALUES (3, 'NZD', 0.60);
+	INSERT INTO currency (id, name, conversion) VALUES (4, 'JPY', 0.0078);
+	INSERT INTO currency (id, name, conversion) VALUES (5, 'CAD', 0.70);
+	INSERT INTO currency (id, name, conversion) VALUES (6, 'AUD', 0.63);
+	INSERT INTO currency (id, name, conversion) VALUES (7, 'CZK', 0.039);
+	INSERT INTO currency (id, name, conversion) VALUES (8, 'MXN', 0.042);
+	INSERT INTO currency (id, name, conversion) VALUES (9, 'MXN', 0.098);
+
+	INSERT INTO client (nome, email) VALUES ('Nelso','nelso@email.com');
+	
