@@ -24,9 +24,9 @@ CREATE TABLE client_credits (
 );
 
 CREATE TABLE total (
-	id	 VARCHAR(512),
+	client_email VARCHAR(512),
 	amount DOUBLE PRECISION NOT NULL,
-	PRIMARY KEY(id)
+	PRIMARY KEY(client_email)
 );
 
 CREATE TABLE balance (
@@ -52,5 +52,5 @@ ALTER TABLE client_payments ADD CONSTRAINT client_payments_fk1 FOREIGN KEY (clie
 ALTER TABLE client_credits ADD CONSTRAINT client_credits_fk1 FOREIGN KEY (client_email) REFERENCES client(email);
 ALTER TABLE balance ADD CONSTRAINT balance_fk1 FOREIGN KEY (client_email) REFERENCES client(email);
 ALTER TABLE last_month_bill ADD CONSTRAINT last_month_bill_fk1 FOREIGN KEY (client_email) REFERENCES client(email);
-ALTER TABLE cliente ADD CONSTRAINT cliente_fk1 FOREIGN KEY (manager_email) REFERENCES manager(email);
+ALTER TABLE client ADD CONSTRAINT cliente_fk1 FOREIGN KEY (manager_email) REFERENCES manager(email);
 

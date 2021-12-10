@@ -88,7 +88,6 @@ public class Client {
                 s = deserializer(record.value());
                 clients_list.add(s);
             }
-
             System.out.println("LISTA DE CLIENTES: " + clients_list.toString());
 
             ConsumerRecords<String, String> recordsCurrency = consumerCurrency.poll(100);
@@ -114,11 +113,7 @@ public class Client {
                         .toString();
                 producer.send(new ProducerRecord<String, String>(paymentsTopic, clients_list.get(randomIndexClients), jsonStringPayment));
 
-                System.out.println("Sending message " + clients_list.get(randomIndexClients) + " made a payment:" + newPayment + " "+ currency_list.get(randomIndexCurrencies) + " to topic " + paymentsTopic);
-
-                /*
-                producer.send(new ProducerRecord<String, String>(paymentsTopic, clients_list.get(randomIndex), "{\"amount\":\"" + newPayment.toString() + "\",\"currency\":\"" + currency + "\"}"));
-                */
+                System.out.println(clients_list.get(randomIndexClients) +" sending message " +  jsonStringPayment + " to topic " + paymentsTopic);
 
 
                 randomIndexClients = rand.nextInt(clients_list.size());
@@ -133,7 +128,7 @@ public class Client {
                         .toString();
                 producer.send(new ProducerRecord<String, String>(creditsTopic, clients_list.get(randomIndexClients), jsonStringCredit));
 
-                System.out.println("Sending message " + clients_list.get(randomIndexClients) + " made a credit:" + newCredit + " "+ currency_list.get(randomIndexCurrencies) + " to topic " + creditsTopic);
+                System.out.println(clients_list.get(randomIndexClients) +" sending message " +  jsonStringCredit + " to topic " + creditsTopic);
 
                 Thread.sleep(30000);
             }else{
