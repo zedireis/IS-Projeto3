@@ -32,10 +32,6 @@ public class KafkaStreams {
                 groupByKey().
                 reduce((v1, v2) -> "{\"amount\":\"" + (get_amount(v1) + get_amount(v2)) + "\",\"currency\":\"EUR\"}");
 
-        /*KTable<String, String> outlines = payments.
-                groupByKey().
-                reduce((v1, v2) -> String.valueOf(get_amount(v1) + get_amount(v2)));*/
-
         outlines.mapValues((k,v) -> "{\"schema\":{\"type\":\"struct\",\"fields\":[{\"type\":\"double\",\"optional\":false,\"field\":\"amount\"},{\"type\":\"string\",\"optional\":false,\"field\":\"client_email\"}],\"optional\":false},\"payload\":{\"amount\":" + get_amount(v) + ",\"client_email\":\"" + k + "\"}}"
         ).toStream().to(outtopicname);
 
