@@ -1,5 +1,6 @@
 package servlet;
 
+import java.sql.SQLException;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -17,12 +18,21 @@ import pojo.Person;
 @Path("/myservice")
 @Produces(MediaType.APPLICATION_JSON)
 public class MyService {
+
+    private ConnectDB db = new ConnectDB();
+
     @GET
     @Path("/person1")
-    public Person method1() {
-        System.out.println("M1 executing....");
-        return new Person("John", 10);
+    public String method1() {
+        try {
+            db.addManager("abc@email.com","Abc");
+            return "Adicionado";
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return "Falhou";
     }
+
     @GET
     @Path("/person2")
     public Person method2(@QueryParam("name") String value) {
@@ -52,7 +62,7 @@ public class MyService {
         person.setAge(person.getAge() + 1);
         return Response.status(Status.OK).entity(person).build();
     }
-    @GET
+    /*@GET
     @Path("/person6")
     @Produces(MediaType.APPLICATION_JSON)
     public Response method6() {
@@ -62,5 +72,5 @@ public class MyService {
         Person p3 = new Person("Claire", 62);
         List<Person> personList = List.of(p1, p2, p3);
         return Response.ok().entity(personList).build();
-    }
+    }*/
 }

@@ -21,9 +21,8 @@
     </dependency>
     <dependency>
       <groupId>book</groupId>
-      <artifactId>jpa</artifactId>
-      <type>jar</type>
-      <version>1.0-SNAPSHOT</version>
+      <artifactId>restclient</artifactId>
+      <version>1</version>
     </dependency>
   </dependencies>
 </project>

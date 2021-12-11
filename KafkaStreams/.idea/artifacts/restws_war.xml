@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="restws:war">
+    <output-path>$PROJECT_DIR$/restws/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>restws</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="restws.war">
+      <element id="artifact" artifact-name="restws:war exploded" />
+    </root>
+  </artifact>
+</component>

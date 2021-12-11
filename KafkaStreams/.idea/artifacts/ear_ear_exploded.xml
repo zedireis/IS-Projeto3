@@ -17,8 +17,8 @@
         <element id="artifact" artifact-name="web:war exploded" />
       </element>
       <element id="directory" name="lib">
-        <element id="archive" name="jpa.jar">
-          <element id="module-output" name="jpa" />
+        <element id="archive" name="restclient.jar">
+          <element id="module-output" name="restclient" />
         </element>
         <element id="file-copy" path="$MAVEN_REPOSITORY$/junit/junit/3.8.1/junit-3.8.1.jar" output-file-name="junit.jar" />
       </element>
