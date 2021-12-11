@@ -4,6 +4,12 @@
 	cd workspace/
 		
 	mvn clean package wildfly:deploy
+	
+	java -cp restclient/target/restclient.jar book.App
+	
+	java -cp messaging/target/messaging.jar kafka.Client
+	
+	java -cp messaging/target/messaging.jar streams.KafkaStreams
 
 #Topicos do Cliente
 
