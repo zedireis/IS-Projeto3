@@ -1,4 +1,6 @@
 /workspace/web/src/main/java/pojo/Person.java
 /workspace/web/src/main/java/servlet/ApplicationConfig.java
 /workspace/web/src/main/java/servlet/MyService.java
+/workspace/web/src/main/java/pojo/Client.java
+/workspace/web/src/main/java/pojo/Manager.java
 /workspace/web/src/main/java/servlet/ConnectDB.java

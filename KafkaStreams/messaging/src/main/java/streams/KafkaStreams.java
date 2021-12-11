@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -116,11 +117,25 @@ public class KafkaStreams {
         )).to("last_month_bill",Produced.with(Serdes.String(), Serdes.String()));
 
         //2 Month without payments
+        KTable<String, String> users = builder.stream("client_list", Consumed.with(Serdes.String(), Serdes.String())).toTable();
 
+        KTable<String, String> twoMonth = payments.groupByKey().windowedBy(TimeWindows.of(Duration.ofDays(60))).reduce((k,v)->k).toStream((wk, v) -> wk.key()).toTable();
+
+        users.toStream().foreach((k,v) -> System.out.println("Users->"+k+v));
+        twoMonth.toStream().foreach((k,v) -> System.out.println("TwoMonth->"+k+v));
+
+        KTable<String, String> noPayments = users.outerJoin(twoMonth, (v1,v2) -> {
+            System.out.println("Teste->"+v1+v2);
+            return "AQUI";
+        });
+
+        //Manager revenue
+        //pagamentos.toStream();
 
 
         org.apache.kafka.streams.KafkaStreams streams = new org.apache.kafka.streams.KafkaStreams(builder.build(), props);
         try {
+            streams.cleanUp();
             streams.start();
             consumer = new ListConsumer();
             consumer.start();
@@ -137,8 +152,20 @@ public class KafkaStreams {
         Double conversion = consumer.getConversion(moeda);
         Double amount = Double.parseDouble(s);
         amount = amount * conversion;
-        System.out.println(record+" CONVERSAO->"+amount);
+        //System.out.println(record+" CONVERSAO->"+amount);
         return amount;
+    }
+
+    public static String get_email(String record){
+        JSONObject obj = new JSONObject(record).getJSONObject("payload");;
+        String email = obj.getString("email");
+        return email;
+    }
+
+    public static String get_manager(String record){
+        JSONObject obj = new JSONObject(record).getJSONObject("payload");;
+        String email = obj.getString("manager_email");
+        return email;
     }
 
 }

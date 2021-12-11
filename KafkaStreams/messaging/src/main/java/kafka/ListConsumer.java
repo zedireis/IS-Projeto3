@@ -7,14 +7,14 @@ import java.util.*;
 
 public class ListConsumer extends Thread{
 
-    private ArrayList<String> clients_list;
+    private Map<String, String> clients_list;
     private Map<String, Double> currency_list;
 
     private Properties props2;
     private Properties props3;
 
     public ListConsumer() {
-        clients_list = new ArrayList<String>();
+        clients_list = new HashMap<String, String>();
         currency_list = new HashMap<String, Double>();
 
         props2 = new Properties();
@@ -55,11 +55,11 @@ public class ListConsumer extends Thread{
         consumerCurrency.poll(0);
         consumerCurrency.seekToBeginning(consumerCurrency.assignment());
 
-        String client, moeda;
+        String email, manager_email, moeda;
         Double conversion;
         Integer sleep_time = 5000;
 
-        JSONObject currency;
+        JSONObject currency, client;
 
         System.out.println("A ir buscar clientes e currencies");
 
@@ -68,8 +68,10 @@ public class ListConsumer extends Thread{
             ConsumerRecords<String, String> records = consumerClients.poll(0);
             for (ConsumerRecord<String, String> record : records) {
                 //System.out.printf(record.value());
-                client = deserializer(record.value());
-                clients_list.add(client);
+                client = new JSONObject(record.value()).getJSONObject("payload");
+                email = client.getString("email");
+                manager_email = client.getString("manager_email");
+                clients_list.put(email, manager_email);
             }
             //System.out.println("LISTA DE CLIENTES: " + clients_list.toString());
 
@@ -98,8 +100,12 @@ public class ListConsumer extends Thread{
         }
     }
 
-    public ArrayList<String> getClients_list() {
-        return clients_list;
+    public String getManager(String cliente){
+        if(clients_list.containsKey(cliente)) {
+            return currency_list.get(cliente).toString();
+        }else{
+            return null;
+        }
     }
 
     public Double getConversion(String money){
@@ -109,9 +115,5 @@ public class ListConsumer extends Thread{
         }else{
             return 1.0;
         }
-    }
-
-    public static String deserializer(String record){
-        return (String) new JSONObject(record).getJSONObject("payload").get("email");
     }
 }

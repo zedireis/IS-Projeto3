@@ -1,4 +1,6 @@
 servlet/ApplicationConfig.class
+pojo/Manager.class
+pojo/Client.class
 servlet/ConnectDB.class
 pojo/Person.class
 servlet/MyService.class

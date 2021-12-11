@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import pojo.Person;
+import pojo.*;
 
 @Path("/myservice")
 @Produces(MediaType.APPLICATION_JSON)
@@ -21,11 +21,13 @@ public class MyService {
 
     private ConnectDB db = new ConnectDB();
 
-    @GET
-    @Path("/person1")
-    public String method1() {
+    @POST
+    @Path("/addManager")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String method1(Manager manager) {
+        System.out.println("ENTREI AQUI");
         try {
-            db.addManager("abc@email.com","Abc");
+            db.addManager(manager.getEmail(), manager.getName());
             return "Adicionado";
         } catch (SQLException throwables) {
             throwables.printStackTrace();
