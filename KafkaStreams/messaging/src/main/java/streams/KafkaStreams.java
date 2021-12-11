@@ -1,5 +1,6 @@
 package streams;
 
+import kafka.ListConsumer;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -13,7 +14,11 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class KafkaStreams {
+
+    private static ListConsumer consumer;
+
     public static void main(String[] args) throws InterruptedException, IOException {
+
         java.util.Properties props = new Properties();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "kafka-streams");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -28,6 +33,7 @@ public class KafkaStreams {
                 groupByKey().
                 reduce((v1, v2) -> {
                     //System.out.println("AQUI->"+v1+v2);
+                    //System.out.println("AQUI->"+consumer.getClients_list().toString());
                     return "{\"amount\":\"" + (get_amount(v1) + get_amount(v2)) + "\",\"currency\":\"EUR\"}";
                 }
                 );
@@ -114,13 +120,24 @@ public class KafkaStreams {
 
 
         org.apache.kafka.streams.KafkaStreams streams = new org.apache.kafka.streams.KafkaStreams(builder.build(), props);
-        streams.start();
+        try {
+            streams.start();
+            consumer = new ListConsumer();
+            consumer.start();
+        }catch (Exception e){
+            System.exit(1);
+        }
+
     }
 
     public static Double get_amount(String record){
         JSONObject obj = new JSONObject(record);
         String s = obj.getString("amount");
+        String moeda = obj.getString("currency");
+        Double conversion = consumer.getConversion(moeda);
         Double amount = Double.parseDouble(s);
+        amount = amount * conversion;
+        System.out.println(record+" CONVERSAO->"+amount);
         return amount;
     }
 
