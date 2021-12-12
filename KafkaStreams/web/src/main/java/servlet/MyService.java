@@ -29,11 +29,11 @@ public class MyService {
     public String method1(Manager manager) {
         try {
             db.addManager(manager.getEmail(), manager.getName());
-            return "Adicionado";
+            return "Manager Adicionado";
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return "Falhou";
+        return "Manager Nao Adicionado\n";
     }
 
     @POST
@@ -41,11 +41,11 @@ public class MyService {
     public String methodAddClient(Client client) {
         try {
             db.addClient(client.getName(), client.getEmail(), client.getManager_email());
-            return "Cliente Adicionado";
+            return "Cliente Adicionado\n";
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return "Cliente Falhou";
+        return "Cliente Nao Adicionado\n";
     }
 
     @POST
@@ -54,11 +54,11 @@ public class MyService {
         try {
             System.out.println("[MY SERVICE]: " + currency.getName() + "    "  + currency.getConversion());
             db.addCurrency(currency.getName(), currency.getConversion());
-            return "Currency Adicionado";
+            return "Currency Adicionado\n";
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return "Currency Falhou";
+        return "Currency Nao Adicionado\n";
     }
     @GET
     @Path("/listManagers")
@@ -85,7 +85,7 @@ public class MyService {
 
     @GET
     @Path("/listCurrencies")
-    @Produces(MediaType.APPLICATION_JSON)
+    //@Produces(MediaType.APPLICATION_JSON)
     public Response method6() throws SQLException {
         List<Currency> list = db.listCurrencies();
 
@@ -96,7 +96,7 @@ public class MyService {
 
     @GET
     @Path("/creditPerClient")
-    @Produces(MediaType.APPLICATION_JSON)
+    //@Produces(MediaType.APPLICATION_JSON)
     public Response method7() throws SQLException {
         // List<Client_credit> list = db.creditPerClient();
         List<String> list = db.creditPerClient();
@@ -162,10 +162,10 @@ public class MyService {
 
     @GET
     @Path("/getMostNegativeCurrentBalance")
-    @Produces(MediaType.APPLICATION_JSON)
+    //@Produces(MediaType.APPLICATION_JSON)
     public Response method14() throws SQLException {
-        List<Client> list = db.MostNegativeCurrentBalance();
-
+        //List<Client> list = db.MostNegativeCurrentBalance();
+        List<String> list = db.MostNegativeCurrentBalance();
 
         return Response.ok().entity(list).build();
     }

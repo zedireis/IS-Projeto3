@@ -21,8 +21,9 @@ import javax.ws.rs.core.StreamingOutput;
 public class App {
     private static void options() throws URISyntaxException {
 
-
+        System.out.println("\n-------------------------------------- IS PROJECT --------------------------------------\n");
         while(true){
+
             System.out.println("1. Add managers to the database");
             System.out.println("2. Add clients to the database");
             System.out.println("3. Add a currency and respective exchange rate for the euro to the database.");
@@ -64,6 +65,7 @@ public class App {
                     break;
                 case 4:
                     listManagers();
+                    break;
                 case 5:
                     listClients();
                     break;
@@ -96,11 +98,6 @@ public class App {
                     getMostNegativeCurrentBalance();
                     break;
 
-
-
-
-
-
                 default:
                     // code block
 
@@ -122,7 +119,6 @@ public class App {
         String manName = managerName.nextLine();
         String manEmail = managerEmail.nextLine();
 
-        System.out.println("OUTPUTS: " + manEmail + "    " + manName);
         if (!manName.isEmpty() && manName.length() != 0 && !manEmail.isEmpty() && manEmail.length() != 0) {
 
             javax.ws.rs.client.Client client = ClientBuilder.newClient();
@@ -136,7 +132,8 @@ public class App {
             Response response = target.request().post(input);
 
             String value = response.readEntity(String.class);
-            System.out.println("RESPONSE MANAGER: " + value);
+            System.out.println(value);
+            System.out.println("\n------------------------------------------------\n\n");
             response.close();
         }
     }
@@ -156,7 +153,6 @@ public class App {
         String cliEmail = clientEmail.nextLine();
         String cliManagerEmail = managerEmail.nextLine();
 
-        System.out.println("OUTPUTS: " + cliName + "    " + cliEmail + "    " + cliManagerEmail);
         if (!cliName.isEmpty() && cliName.length() != 0 && !cliEmail.isEmpty() && cliEmail.length() != 0
                 && !cliManagerEmail.isEmpty() && cliManagerEmail.length() != 0) {
 
@@ -171,7 +167,8 @@ public class App {
             Response response = target.request().post(input);
 
             String value = response.readEntity(String.class);
-            System.out.println("RESPONSE CLIENT: " + value);
+            System.out.println(value);
+            System.out.println("\n------------------------------------------------\n\n");
             response.close();
         }
     }
@@ -205,6 +202,7 @@ public class App {
 
             String value = response.readEntity(String.class);
             System.out.println("RESPONSE CURRENCY: " + value);
+            System.out.println("\n------------------------------------------------\n\n");
             response.close();
         }
     }
@@ -222,6 +220,7 @@ public class App {
         for(int i = 0; i < result.size(); i++){
             System.out.println(result.get(i).toString());
         }
+        System.out.println("\n------------------------------------------------\n\n");
         response.close();
     }
 
@@ -236,6 +235,7 @@ public class App {
         for(int i = 0; i < result.size(); i++){
             System.out.println(result.get(i).toString());
         }
+        System.out.println("\n------------------------------------------------\n\n");
         response.close();
     }
 
@@ -365,12 +365,12 @@ public class App {
         WebTarget target = client.target(new URI("http://wildfly:8080/web/rest/myservice/getMostNegativeCurrentBalance"));
 
         Response response = target.request().get();
-        List<pojo.Client> result = response.readEntity(new GenericType<List<pojo.Client>>() {});
-
+        //List<pojo.Client> result = response.readEntity(new GenericType<List<pojo.Client>>() {});
+        List<String> result = response.readEntity(new GenericType<List<String>>() {});
         for(int i = 0; i < result.size(); i++){
-            System.out.println(result.get(i).toString());
+            //System.out.println(result.get(i).toString());
+            System.out.println(result.get(i));
         }
-        response.close();
         System.out.println("\n------------------------------------------------\n\n");
         response.close();
     }

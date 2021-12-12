@@ -25,7 +25,7 @@ public class ConnectDB {
     String CURRENT_BALANCE = "SELECT * FROM balance WHERE client_email = ?";
     String TOTAL_CREDITS = "SELECT SUM(amount) FROM client_credits";
     String TOTAL_PAYMENTS = "SELECT SUM(amount) FROM client_payments";
-    String TOTAL_BALANCE = "SELECT SUM(amount) FROM balance";
+    String TOTAL_BALANCE = "SELECT * FROM total";
 
     String MOST_NEGATIVE_BALANCE = "SELECT client.email, client.nome, client.manager_email, balance.amount from client inner join balance on client.email = balance.client_email and balance.amount in(select min(amount) from balance);";
     String LAST_MONTH_BILL = "SELECT amount, client_email from last_month_bill";
@@ -144,6 +144,11 @@ public class ConnectDB {
         List<String> list = new ArrayList<String>();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery( CREDIT_PER_CLIENT);
+        String result = "Sem creditos";
+        if(!rs.next()){
+            list.add(result);
+        }
+
         while ( rs.next() ){
             Double amount = rs.getDouble("amount");
             System.out.println("[WHILE]: " + amount);
@@ -151,7 +156,7 @@ public class ConnectDB {
             String client_email = rs.getString("client_email");
             System.out.println("[WHILE]: " + client_email);
             //Client_credit client_credit = new Client_credit(amount, client_email);
-            String result = "Client: " + client_email + " | " + "Credits: " + amount;
+            result = "Client: " + client_email + " | " + "Credits: " + amount;
             list.add(result);
             //list.add(client_credit);
         }
@@ -169,6 +174,10 @@ public class ConnectDB {
         List<String> list = new ArrayList<String>();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery( PAYMENT_PER_CLIENT);
+        String result = "Sem Payments";
+        if(!rs.next()){
+            list.add(result);
+        }
         while ( rs.next() ){
             Double amount = rs.getDouble("amount");
             System.out.println("[WHILE]: " + amount);
@@ -176,7 +185,7 @@ public class ConnectDB {
             String client_email = rs.getString("client_email");
             System.out.println("[WHILE]: " + client_email);
             //Client_credit client_credit = new Client_credit(amount, client_email);
-            String result = "Client: " + client_email + " | " + "Payment: " + amount;
+            result = "Client: " + client_email + " | " + "Payment: " + amount;
             list.add(result);
             //list.add(client_credit);
         }
@@ -194,7 +203,9 @@ public class ConnectDB {
         PreparedStatement ps = conn.prepareStatement(CURRENT_BALANCE);
         ps.setString(1, email);
         ResultSet  rs = ps.executeQuery();
-        String result = "Cliente não encontrado";
+        String result;
+        result= "Cliente Não encontrado ou Sem nehuma Balance";
+
         while ( rs.next() ){
             Double amount = rs.getDouble("amount");
             System.out.println("[WHILE]: " + amount);
@@ -254,9 +265,9 @@ public class ConnectDB {
         ResultSet rs = stmt.executeQuery( TOTAL_BALANCE);
         String result = "NO RECORDS";
         while ( rs.next() ){
-            Double total = rs.getDouble("min_balance");
+            Double total = rs.getDouble("sum");
             System.out.println("[WHILE]: " + total);
-            result = "HIGHEST: " + total;
+            result = "TOTAL BALANCE: " + total;
         }
 
         rs.close();
@@ -265,11 +276,14 @@ public class ConnectDB {
         return result;
 
     }
-    public List<Client> MostNegativeCurrentBalance() throws SQLException {
-        List<Client> list = new ArrayList<Client>();
+    public List<String> MostNegativeCurrentBalance() throws SQLException {
+        List<String> list = new ArrayList<String>();
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery( MOST_NEGATIVE_BALANCE);
-        String result = "NO RECORDS";
+        String result = "Sem clientes";
+        if(!rs.next()){
+            list.add(result);
+        }
         while ( rs.next() ){
             String nome = rs.getString("nome");
             System.out.println("[WHILE]: " + nome);
@@ -279,8 +293,10 @@ public class ConnectDB {
             System.out.println("[WHILE]: " + manager_email);
             Double total = rs.getDouble("amount");
             System.out.println("[WHILE]: " + total);
-            Client client = new Client(nome, email, manager_email);
-            list.add(client);
+            //Client client = new Client(nome, email, manager_email);
+
+            result = "Nome: " + nome + " | " + "Email: " + email + " | " + "Manager: " + manager_email + " | " + "Debt: " + total;
+            list.add(result);
         }
 
         rs.close();
@@ -295,7 +311,10 @@ public class ConnectDB {
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(LAST_MONTH_BILL);
         List<String> list = new ArrayList<String>();
-        String result = "Cliente não encontrado";
+        String result = "Sem clientes";
+        if(!rs.next()){
+            list.add(result);
+        }
         while ( rs.next() ){
             Double amount = rs.getDouble("amount");
             System.out.println("[WHILE]: " + amount);
