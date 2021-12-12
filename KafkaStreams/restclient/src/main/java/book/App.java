@@ -88,6 +88,10 @@ public class App {
                 case 12:
                     getTotalBalance();
                     break;
+                case 15:
+                    getMostNegativeCurrentBalance();
+                    break;
+
 
 
 
@@ -348,6 +352,23 @@ public class App {
         String result = response.readEntity(new GenericType<String>() {});
 
         System.out.println(result);
+        System.out.println("\n------------------------------------------------\n\n");
+        response.close();
+    }
+
+
+    private static void getMostNegativeCurrentBalance() throws URISyntaxException{
+        System.out.println("HIGHEST OUTSTANDING DEBT\n");
+        javax.ws.rs.client.Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(new URI("http://wildfly:8080/web/rest/myservice/getMostNegativeCurrentBalance"));
+
+        Response response = target.request().get();
+        List<pojo.Client> result = response.readEntity(new GenericType<List<pojo.Client>>() {});
+
+        for(int i = 0; i < result.size(); i++){
+            System.out.println(result.get(i).toString());
+        }
+        response.close();
         System.out.println("\n------------------------------------------------\n\n");
         response.close();
     }

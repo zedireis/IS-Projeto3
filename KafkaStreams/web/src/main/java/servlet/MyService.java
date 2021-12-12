@@ -160,6 +160,16 @@ public class MyService {
         return Response.ok().entity(result).build();
     }
 
+    @GET
+    @Path("/getMostNegativeCurrentBalance")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response method14() throws SQLException {
+        List<Client> list = db.MostNegativeCurrentBalance();
+
+
+        return Response.ok().entity(list).build();
+    }
+
 
 
 
