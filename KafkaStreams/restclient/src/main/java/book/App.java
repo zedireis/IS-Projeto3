@@ -17,6 +17,66 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 public class App {
+    private static void options() throws URISyntaxException {
+
+
+        while(true){
+            System.out.println("1. Add managers to the database");
+            System.out.println("2. Add clients to the database");
+            System.out.println("3. Add a currency and respective exchange rate for the euro to the database.");
+            System.out.println("4. List managers from the database");
+            System.out.println("5. List clients from the database.");
+            System.out.println("6. List currencies.");
+            System.out.println("7. Get the credit per client");
+            System.out.println("8. Get the payments per client.");
+            System.out.println("9. Get the current balance of a client");
+            System.out.println("10. Get the total credits");
+            System.out.println("11. Get the total payments");
+            System.out.println("12. Get the total balance");
+            System.out.println("13. Compute the bill for each client for the last month");
+            System.out.println("14. Get the list of clients without payments for the last two months.");
+            System.out.println("15. Get the data of the person with the highest outstanding debt ");
+            System.out.println("16. Get the data of the manager who has made the highest revenue in payments from his or her clients.");
+
+            Scanner obj  = new Scanner(System.in);
+            System.out.println("\nCHOOSE OPTION");
+
+            String option = obj.nextLine();
+            int op = 0;
+            try
+            {
+                op = Integer.parseInt(option);
+            }
+            catch (NumberFormatException e)
+            {}
+
+            switch(op) {
+                case 1:
+                    addManager();
+                    break;
+                case 2:
+                    addClient();
+                    break;
+                case 3:
+                    addCurrency();
+                    break;
+                case 4:
+                    listManagers();
+                case 5:
+                    listClients();
+                    break;
+                case 6:
+                    listCurrencies();
+                    break;
+                default:
+                    // code block
+
+            }
+        }
+
+
+
+    }
 
     private static void addManager() throws URISyntaxException {
         System.out.println("ADD MANAGER");
@@ -162,12 +222,8 @@ public class App {
 
     public static void main(String[] args) {
         try {
-            //addManager();
-            //addClient();
-            //addCurrency();
-            listManagers();
-            listClients();
-            listCurrencies();
+
+            options();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
