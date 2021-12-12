@@ -94,24 +94,77 @@ public class MyService {
         return Response.ok().entity(list).build();
     }
 
-    @POST
-    @Path("/person5")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response method5(Person person) {
-        System.out.println("M5 executing....");
-        person.setName("No Name");
-        person.setAge(person.getAge() + 1);
-        return Response.status(Status.OK).entity(person).build();
-    }
-    /*@GET
-    @Path("/person6")
+    @GET
+    @Path("/creditPerClient")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response method6() {
-        System.out.println("M6 executing....");
-        Person p1 = new Person("James", 60);
-        Person p2 = new Person("Kate", 61);
-        Person p3 = new Person("Claire", 62);
-        List<Person> personList = List.of(p1, p2, p3);
-        return Response.ok().entity(personList).build();
-    }*/
+    public Response method7() throws SQLException {
+        // List<Client_credit> list = db.creditPerClient();
+        List<String> list = db.creditPerClient();
+
+
+        return Response.ok().entity(list).build();
+    }
+
+    @GET
+    @Path("/paymentPerClient")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response method8() throws SQLException {
+        // List<Client_credit> list = db.creditPerClient();
+        List<String> list = db.paymentPerClient();
+
+
+        return Response.ok().entity(list).build();
+    }
+
+    @GET
+    @Path("/currentBalance")
+    //@Produces(MediaType.APPLICATION_JSON)
+    public Response method9(@QueryParam("email") String email) throws SQLException {
+        // List<Client_credit> list = db.creditPerClient();
+        String result = db.currentBalance(email);
+
+
+        return Response.ok().entity(result).build();
+    }
+
+    @GET
+    @Path("/getTotalCredits")
+    //@Produces(MediaType.APPLICATION_JSON)
+    public Response method10() throws SQLException {
+        // List<Client_credit> list = db.creditPerClient();
+        String result = db.totalCredits();
+
+
+        return Response.ok().entity(result).build();
+    }
+
+    @GET
+    @Path("/getTotalPayments")
+    //@Produces(MediaType.APPLICATION_JSON)
+    public Response method11() throws SQLException {
+        // List<Client_credit> list = db.creditPerClient();
+        String result = db.totalPayments();
+
+
+        return Response.ok().entity(result).build();
+    }
+
+    @GET
+    @Path("/getTotalBalance")
+    //@Produces(MediaType.APPLICATION_JSON)
+    public Response method12() throws SQLException {
+        // List<Client_credit> list = db.creditPerClient();
+        String result = db.totalBalance();
+
+
+        return Response.ok().entity(result).build();
+    }
+
+
+
+
+
+
+
+
 }

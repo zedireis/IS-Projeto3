@@ -20,6 +20,12 @@ public class ConnectDB {
     String LIST_MANAGERS = "SELECT * FROM manager";
     String LIST_CLIENTS = "SELECT * FROM client";
     String LIST_CURRENCIES = "SELECT * FROM currency";
+    String CREDIT_PER_CLIENT = "SELECT * FROM client_credits";
+    String PAYMENT_PER_CLIENT = "SELECT * FROM client_payments";
+    String CURRENT_BALANCE = "SELECT * FROM balance WHERE client_email = ?";
+    String TOTAL_CREDITS = "SELECT SUM(amount) FROM client_credits";
+    String TOTAL_PAYMENTS = "SELECT SUM(amount) FROM client_payments";
+    String TOTAL_BALANCE = "SELECT SUM(amount) FROM balance";
 
 
     public ConnectDB() {
@@ -129,4 +135,143 @@ public class ConnectDB {
         return list;
 
     }
+
+    //public List<Client_credit> creditPerClient() throws SQLException {
+    public List<String> creditPerClient() throws SQLException {
+
+        //List<Client_credit> list = new ArrayList<Client_credit>();
+        List<String> list = new ArrayList<String>();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery( CREDIT_PER_CLIENT);
+        while ( rs.next() ){
+            Double amount = rs.getDouble("amount");
+            System.out.println("[WHILE]: " + amount);
+
+            String client_email = rs.getString("client_email");
+            System.out.println("[WHILE]: " + client_email);
+            //Client_credit client_credit = new Client_credit(amount, client_email);
+            String result = "Client: " + client_email + " | " + "Credits: " + amount;
+            list.add(result);
+            //list.add(client_credit);
+        }
+
+        rs.close();
+        stmt.close();
+        conn.close();
+        return list;
+
+    }
+
+    public List<String> paymentPerClient() throws SQLException {
+
+        //List<Client_credit> list = new ArrayList<Client_credit>();
+        List<String> list = new ArrayList<String>();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery( PAYMENT_PER_CLIENT);
+        while ( rs.next() ){
+            Double amount = rs.getDouble("amount");
+            System.out.println("[WHILE]: " + amount);
+
+            String client_email = rs.getString("client_email");
+            System.out.println("[WHILE]: " + client_email);
+            //Client_credit client_credit = new Client_credit(amount, client_email);
+            String result = "Client: " + client_email + " | " + "Payment: " + amount;
+            list.add(result);
+            //list.add(client_credit);
+        }
+
+        rs.close();
+        stmt.close();
+        conn.close();
+        return list;
+
+    }
+
+
+    public String currentBalance(String email) throws SQLException {
+
+        PreparedStatement ps = conn.prepareStatement(CURRENT_BALANCE);
+        ps.setString(1, email);
+        ResultSet  rs = ps.executeQuery();
+        String result = "Cliente não encontrado";
+        while ( rs.next() ){
+            Double amount = rs.getDouble("amount");
+            System.out.println("[WHILE]: " + amount);
+
+            String client_email = rs.getString("client_email");
+            System.out.println("[WHILE]: " + client_email);
+            //Client_credit client_credit = new Client_credit(amount, client_email);
+            result = "Client: " + client_email + " | " + "Balance: " + amount;
+            //list.add(client_credit);
+        }
+
+        rs.close();
+        ps.close();
+        conn.close();
+        System.out.println("RESULT: " + result);
+        return result;
+
+    }
+
+
+    public String totalCredits() throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery( TOTAL_CREDITS);
+        String result = "NO RECORDS";
+        while ( rs.next() ){
+            Double total = rs.getDouble("sum");
+            System.out.println("[WHILE]: " + total);
+            result = "TOTAL CREDITS: " + total;
+        }
+
+        rs.close();
+        stmt.close();
+        conn.close();
+        return result;
+
+    }
+
+    public String totalPayments() throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery( TOTAL_PAYMENTS);
+        String result = "NO RECORDS";
+        while ( rs.next() ){
+            Double total = rs.getDouble("sum");
+            System.out.println("[WHILE]: " + total);
+            result = "TOTAL PAYMENTS: " + total;
+        }
+
+        rs.close();
+        stmt.close();
+        conn.close();
+        return result;
+
+    }
+
+    public String totalBalance() throws SQLException {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery( TOTAL_BALANCE);
+        String result = "NO RECORDS";
+        while ( rs.next() ){
+            Double total = rs.getDouble("sum");
+            System.out.println("[WHILE]: " + total);
+            result = "TOTAL BALANCE: " + total;
+        }
+
+        rs.close();
+        stmt.close();
+        conn.close();
+        return result;
+
+    }
+
+
+
+
+
+
+
+
+
+
 }

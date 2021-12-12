@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.sound.midi.Soundbank;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -15,6 +16,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 
 public class App {
     private static void options() throws URISyntaxException {
@@ -68,6 +70,29 @@ public class App {
                 case 6:
                     listCurrencies();
                     break;
+                case 7:
+                    getCreditperClient();
+                    break;
+                case 8:
+                    getPaymentsperClient();
+                    break;
+                case 9:
+                    currentBalance();
+                    break;
+                case 10:
+                    getTotalCredits();
+                    break;
+                case 11:
+                    getTotalPayments();
+                    break;
+                case 12:
+                    getTotalBalance();
+                    break;
+
+
+
+
+
                 default:
                     // code block
 
@@ -217,8 +242,118 @@ public class App {
         for(int i = 0; i < result.size(); i++){
             System.out.println(result.get(i).toString());
         }
+        System.out.println("\n------------------------------------------------\n\n");
         response.close();
     }
+
+    private static void getCreditperClient() throws URISyntaxException{
+        System.out.println("CREDIT PER CLIENT\n");
+        javax.ws.rs.client.Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(new URI("http://wildfly:8080/web/rest/myservice/creditPerClient"));
+
+        Response response = target.request().get();
+        //List<pojo.Client_credit> result = response.readEntity(new GenericType<List<pojo.Client_credit>>() {});
+
+        List<String> result = response.readEntity(new GenericType<List<String>>() {});
+
+        for(int i = 0; i < result.size(); i++){
+            //System.out.println(result.get(i).toString());
+            System.out.println(result.get(i));
+
+        }
+        System.out.println("\n------------------------------------------------\n\n");
+        response.close();
+    }
+
+    private static void getPaymentsperClient() throws URISyntaxException{
+        System.out.println("PAYMENT PER CLIENT\n");
+        javax.ws.rs.client.Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(new URI("http://wildfly:8080/web/rest/myservice/paymentPerClient"));
+
+        Response response = target.request().get();
+        //List<pojo.Client_credit> result = response.readEntity(new GenericType<List<pojo.Client_credit>>() {});
+
+        List<String> result = response.readEntity(new GenericType<List<String>>() {});
+
+        for(int i = 0; i < result.size(); i++){
+            //System.out.println(result.get(i).toString());
+            System.out.println(result.get(i));
+
+        }
+        System.out.println("\n------------------------------------------------\n\n");
+        response.close();
+    }
+
+    private static void currentBalance() throws URISyntaxException{
+        System.out.println("CURRENT BALANCE\n");
+        javax.ws.rs.client.Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(new URI("http://wildfly:8080/web/rest/myservice/currentBalance"));
+
+        System.out.println("Email do cliente: ");
+        Scanner clientEmail = new Scanner(System.in);
+
+        String cliEmail= clientEmail.nextLine();
+
+        target = target.queryParam("email", cliEmail);
+        Response response = target.request().get();
+
+        //List<pojo.Client_credit> result = response.readEntity(new GenericType<List<pojo.Client_credit>>() {});
+
+        String result = response.readEntity(new GenericType<String>() {});
+
+        System.out.println(result);
+        System.out.println("\n------------------------------------------------\n\n");
+        response.close();
+    }
+
+
+    private static void getTotalCredits() throws URISyntaxException{
+        System.out.println("GET TOTAL CREDITS\n");
+        javax.ws.rs.client.Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(new URI("http://wildfly:8080/web/rest/myservice/getTotalCredits"));
+
+        Response response = target.request().get();
+        //List<pojo.Client_credit> result = response.readEntity(new GenericType<List<pojo.Client_credit>>() {});
+
+        String result = response.readEntity(new GenericType<String>() {});
+
+        System.out.println(result);
+        System.out.println("\n------------------------------------------------\n\n");
+        response.close();
+    }
+
+    private static void getTotalPayments() throws URISyntaxException{
+        System.out.println("GET TOTAL CREDITS\n");
+        javax.ws.rs.client.Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(new URI("http://wildfly:8080/web/rest/myservice/getTotalPayments"));
+
+        Response response = target.request().get();
+        //List<pojo.Client_credit> result = response.readEntity(new GenericType<List<pojo.Client_credit>>() {});
+
+        String result = response.readEntity(new GenericType<String>() {});
+
+        System.out.println(result);
+        System.out.println("\n------------------------------------------------\n\n");
+        response.close();
+    }
+
+    private static void getTotalBalance() throws URISyntaxException{
+        System.out.println("GET TOTAL BALANCE\n");
+        javax.ws.rs.client.Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(new URI("http://wildfly:8080/web/rest/myservice/getTotalBalance"));
+
+        Response response = target.request().get();
+        //List<pojo.Client_credit> result = response.readEntity(new GenericType<List<pojo.Client_credit>>() {});
+
+        String result = response.readEntity(new GenericType<String>() {});
+
+        System.out.println(result);
+        System.out.println("\n------------------------------------------------\n\n");
+        response.close();
+    }
+
+
+
 
     public static void main(String[] args) {
         try {
