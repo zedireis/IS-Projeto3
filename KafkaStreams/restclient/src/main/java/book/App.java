@@ -88,6 +88,10 @@ public class App {
                 case 12:
                     getTotalBalance();
                     break;
+                case 13:
+                    getLastMonthBill();
+                    break;
+
                 case 15:
                     getMostNegativeCurrentBalance();
                     break;
@@ -310,7 +314,6 @@ public class App {
         response.close();
     }
 
-
     private static void getTotalCredits() throws URISyntaxException{
         System.out.println("GET TOTAL CREDITS\n");
         javax.ws.rs.client.Client client = ClientBuilder.newClient();
@@ -356,7 +359,6 @@ public class App {
         response.close();
     }
 
-
     private static void getMostNegativeCurrentBalance() throws URISyntaxException{
         System.out.println("HIGHEST OUTSTANDING DEBT\n");
         javax.ws.rs.client.Client client = ClientBuilder.newClient();
@@ -367,6 +369,22 @@ public class App {
 
         for(int i = 0; i < result.size(); i++){
             System.out.println(result.get(i).toString());
+        }
+        response.close();
+        System.out.println("\n------------------------------------------------\n\n");
+        response.close();
+    }
+
+    private static void getLastMonthBill() throws URISyntaxException{
+        System.out.println("HIGHEST OUTSTANDING DEBT\n");
+        javax.ws.rs.client.Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(new URI("http://wildfly:8080/web/rest/myservice/getLastMonthBill"));
+
+        Response response = target.request().get();
+        List<String> result = response.readEntity(new GenericType<List<String>>() {});
+
+        for(int i = 0; i < result.size(); i++){
+            System.out.println(result.get(i));
         }
         response.close();
         System.out.println("\n------------------------------------------------\n\n");

@@ -28,7 +28,7 @@ public class ConnectDB {
     String TOTAL_BALANCE = "SELECT SUM(amount) FROM balance";
 
     String MOST_NEGATIVE_BALANCE = "SELECT client.email, client.nome, client.manager_email, balance.amount from client inner join balance on client.email = balance.client_email and balance.amount in(select min(amount) from balance);";
-
+    String LAST_MONTH_BILL = "SELECT amount, client_email from last_month_bill";
     public ConnectDB() {
         try {
             Class.forName("org.postgresql.Driver");
@@ -289,6 +289,32 @@ public class ConnectDB {
         return list;
 
     }
+
+    public List<String> getLastMonthBill() throws SQLException {
+
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(LAST_MONTH_BILL);
+        List<String> list = new ArrayList<String>();
+        String result = "Cliente não encontrado";
+        while ( rs.next() ){
+            Double amount = rs.getDouble("amount");
+            System.out.println("[WHILE]: " + amount);
+
+            String client_email = rs.getString("client_email");
+            System.out.println("[WHILE]: " + client_email);
+            result = "Client: " + client_email + " | " + "Last Month Bill: " + amount;
+            list.add(result);
+        }
+
+        rs.close();
+        stmt.close();
+        conn.close();
+        return list;
+
+    }
+
+
+
 
 
 

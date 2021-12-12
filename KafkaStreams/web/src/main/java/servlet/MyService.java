@@ -170,6 +170,20 @@ public class MyService {
         return Response.ok().entity(list).build();
     }
 
+    @GET
+    @Path("/getLastMonthBill")
+    //@Produces(MediaType.APPLICATION_JSON)
+    public Response method13() throws SQLException {
+        // List<Client_credit> list = db.creditPerClient();
+        List<String> list = db.getLastMonthBill();
+
+
+        return Response.ok().entity(list).build();
+    }
+
+
+
+
 
 
 
