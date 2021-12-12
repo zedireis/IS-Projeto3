@@ -1,6 +1,7 @@
 package servlet;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -9,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -58,14 +60,40 @@ public class MyService {
         }
         return "Currency Falhou";
     }
-    @POST
-    @Path("/person4")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response method4(Person person) {
-        System.out.println("M4 executing....");
-        String str = "Person received : " + person.getName() + " " + person.getAge();
-        return Response.status(Status.OK).entity(str).build();
+    @GET
+    @Path("/listManagers")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response method4() throws SQLException {
+        System.out.println("ENTROU NO METHOD LIST MANAGERS");
+        List<Manager> list = db.listManagers();
+
+        GenericEntity<List<Manager>> entities = new GenericEntity<List<Manager>>(list){};
+
+        return Response.ok().entity(list).build();
     }
+
+    @GET
+    @Path("/listClients")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response method5() throws SQLException {
+        List<Client> list = db.listClients();
+
+        //GenericEntity<List<Client>> entities = new GenericEntity<List<Client>>(list){};
+
+        return Response.ok().entity(list).build();
+    }
+
+    @GET
+    @Path("/listCurrencies")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response method6() throws SQLException {
+        List<Currency> list = db.listCurrencies();
+
+        //GenericEntity<List<Client>> entities = new GenericEntity<List<Client>>(list){};
+
+        return Response.ok().entity(list).build();
+    }
+
     @POST
     @Path("/person5")
     @Consumes(MediaType.APPLICATION_JSON)

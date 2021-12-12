@@ -29,4 +29,8 @@ public class Manager{
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public String toString(){
+        return "Name: " + this.name + " " + "email: " + this.email + "\n";
+    }
 }

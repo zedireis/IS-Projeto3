@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 public class App {
+
     private static void addManager() throws URISyntaxException {
         System.out.println("ADD MANAGER");
 
@@ -93,7 +94,6 @@ public class App {
         String cuName = currencyName.nextLine();
         String cuConversion = currencyConversion.nextLine();
 
-
         System.out.println("OUTPUTS: " + cuName + "    " + cuConversion );
 
         if (!cuName.isEmpty() && cuName.length() != 0 && !cuConversion.isEmpty() && cuConversion.length() != 0) {
@@ -116,11 +116,58 @@ public class App {
         }
     }
 
+    private static void listManagers() throws URISyntaxException{
+        System.out.println("LIST MANAGERS");
+        javax.ws.rs.client.Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(new URI("http://wildfly:8080/web/rest/myservice/listManagers"));
+
+        Response response = target.request().get();
+
+        List<Manager> result = response.readEntity(new GenericType<List<Manager>>() {});
+
+
+        for(int i = 0; i < result.size(); i++){
+            System.out.println(result.get(i).toString());
+        }
+        response.close();
+    }
+
+    private static void listClients() throws URISyntaxException{
+        System.out.println("LIST CLIENTS");
+        javax.ws.rs.client.Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(new URI("http://wildfly:8080/web/rest/myservice/listClients"));
+
+        Response response = target.request().get();
+        List<pojo.Client> result = response.readEntity(new GenericType<List<pojo.Client>>() {});
+
+        for(int i = 0; i < result.size(); i++){
+            System.out.println(result.get(i).toString());
+        }
+        response.close();
+    }
+
+    private static void listCurrencies() throws URISyntaxException{
+        System.out.println("LIST CURRENCIES");
+        javax.ws.rs.client.Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(new URI("http://wildfly:8080/web/rest/myservice/listCurrencies"));
+
+        Response response = target.request().get();
+        List<pojo.Currency> result = response.readEntity(new GenericType<List<pojo.Currency>>() {});
+
+        for(int i = 0; i < result.size(); i++){
+            System.out.println(result.get(i).toString());
+        }
+        response.close();
+    }
+
     public static void main(String[] args) {
         try {
             //addManager();
             //addClient();
-            addCurrency();
+            //addCurrency();
+            listManagers();
+            listClients();
+            listCurrencies();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

@@ -1,9 +1,12 @@
 package pojo;
 
+
 public class Client{
 
     private String name;
     private String email;
+
+
     private String manager_email;
 
 
@@ -38,5 +41,9 @@ public class Client{
 
     public void setManager_email(String manager_email) {
         this.manager_email = manager_email;
+    }
+
+    public String toString(){
+        return "Name: " + this.name + " " + "email: " + this.email + "Manager email:" + this.manager_email + "\n";
     }
 }

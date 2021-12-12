@@ -1,6 +1,6 @@
 package pojo;
 
-public class Currency {
+public class Currency{
 
     private String name;
     private Double conversion;
@@ -28,5 +28,9 @@ public class Currency {
 
     public void setConversion(Double conversion) {
         this.conversion = conversion;
+    }
+
+    public String toString(){
+        return "Name: " + this.name + " " + "Conversion to EUR: " + this.conversion + "\n";
     }
 }
