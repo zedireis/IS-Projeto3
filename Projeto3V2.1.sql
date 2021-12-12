@@ -39,6 +39,11 @@ CREATE TABLE last_month_bill (
 	client_email VARCHAR(512) UNIQUE NOT NULL
 );
 
+CREATE TABLE two_month_payments (
+	amount	 DOUBLE PRECISION NOT NULL,
+	client_email VARCHAR(512) UNIQUE NOT NULL
+);
+
 CREATE TABLE manager_revenue (
 	amount	 DOUBLE PRECISION NOT NULL,
 	client_email VARCHAR(512) UNIQUE NOT NULL
@@ -58,5 +63,6 @@ ALTER TABLE client_credits ADD CONSTRAINT client_credits_fk1 FOREIGN KEY (client
 ALTER TABLE balance ADD CONSTRAINT balance_fk1 FOREIGN KEY (client_email) REFERENCES client(email);
 ALTER TABLE last_month_bill ADD CONSTRAINT last_month_bill_fk1 FOREIGN KEY (client_email) REFERENCES client(email);
 ALTER TABLE manager_revenue ADD CONSTRAINT manager_revenue_fk1 FOREIGN KEY (client_email) REFERENCES manager(email);
+ALTER TABLE two_month_payments ADD CONSTRAINT two_month_payments_fk1 FOREIGN KEY (client_email) REFERENCES manager(email);
 ALTER TABLE client ADD CONSTRAINT cliente_fk1 FOREIGN KEY (manager_email) REFERENCES manager(email);
 

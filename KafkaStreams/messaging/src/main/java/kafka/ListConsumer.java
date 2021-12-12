@@ -13,6 +13,9 @@ public class ListConsumer extends Thread{
     private Properties props2;
     private Properties props3;
 
+    private Consumer<String, String> consumerClients;
+    private Consumer<String, String> consumerCurrency;
+
     public ListConsumer() {
         clients_list = new HashMap<String, String>();
         currency_list = new HashMap<String, Double>();
@@ -43,10 +46,10 @@ public class ListConsumer extends Thread{
 
     @Override
     public void run() {
-        Consumer<String, String> consumerClients = new KafkaConsumer<>(props2);
+        consumerClients = new KafkaConsumer<>(props2);
         consumerClients.subscribe(Collections.singletonList("client_list"));
 
-        Consumer<String, String> consumerCurrency = new KafkaConsumer<>(props3);
+        consumerCurrency = new KafkaConsumer<>(props3);
         consumerCurrency.subscribe(Collections.singletonList("currency_list"));
 
         consumerClients.poll(0);
@@ -98,6 +101,11 @@ public class ListConsumer extends Thread{
                 e.printStackTrace();
             }
         }
+    }
+
+    public void close(){
+        consumerClients.close();
+        consumerCurrency.close();
     }
 
     public String getManager(String cliente){

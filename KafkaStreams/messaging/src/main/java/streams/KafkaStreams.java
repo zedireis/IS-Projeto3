@@ -79,7 +79,7 @@ public class KafkaStreams {
 
 
         //Soma de todos os creditos
-        KTable<String, String> totalCredits = pagamentos.toStream().selectKey((k,v) -> "creditos").groupByKey().reduce((v1, v2) -> {
+        KTable<String, String> totalCredits = creditos.toStream().selectKey((k,v) -> "creditos").groupByKey().reduce((v1, v2) -> {
             return "{\"amount\":\"" + (get_amount(v1) + get_amount(v2)) + "\",\"currency\":\"EUR\"}";
         });
         totalCredits.mapValues((k,v) -> "{\"schema\":{\"type\":\"struct\",\"fields\":[{\"type\":\"double\",\"optional\":false,\"field\":\"amount\"},{\"type\":\"string\",\"optional\":false,\"field\":\"client_email\"}],\"optional\":false},\"payload\":{\"amount\":" + get_amount(v) + ",\"client_email\":\"creditos\"}}"
@@ -100,8 +100,8 @@ public class KafkaStreams {
                     //System.out.println("AQUI->"+v1+v2);
                     return "{\"amount\":\"" + (get_amount(v1) + get_amount(v2)) + "\",\"currency\":\"EUR\"}";
                 });
-        KTable<Windowed<String>, String> lastMonthBalance = lastMonthCredits
-                .outerJoin(lastMonthPayments, (payment, credit) -> {
+        KTable<Windowed<String>, String> lastMonthBalance = lastMonthPayments
+                .outerJoin(lastMonthCredits, (payment, credit) -> {
                     //System.out.println("Pagamentos"+payment+"<> Credit"+credit);
                     if(credit == null){
                         return "{\"amount\":\"" + (0 - get_amount(payment)) + "\",\"currency\":\"EUR\"}";
@@ -117,31 +117,48 @@ public class KafkaStreams {
         )).to("last_month_bill",Produced.with(Serdes.String(), Serdes.String()));
 
         //2 Month without payments
-        KTable<String, String> users = builder.stream("client_list", Consumed.with(Serdes.String(), Serdes.String())).toTable();
+        KStream<String, Object> users = builder.stream("client_list").selectKey((k,v)->get_email((String) v));
 
-        KTable<String, String> twoMonth = payments.groupByKey().windowedBy(TimeWindows.of(Duration.ofDays(60))).reduce((k,v)->k).toStream((wk, v) -> wk.key()).toTable();
+        //users.foreach((k,v)->System.out.println("Users->"+k+v));
 
-        users.toStream().foreach((k,v) -> System.out.println("Users->"+k+v));
-        twoMonth.toStream().foreach((k,v) -> System.out.println("TwoMonth->"+k+v));
+        KTable<String, Object> userTable = users.toTable();
 
-        KTable<String, String> noPayments = users.outerJoin(twoMonth, (v1,v2) -> {
-            System.out.println("Teste->"+v1+v2);
-            return "AQUI";
+        KTable<Windowed<String>, Long> aux = payments.groupByKey().windowedBy(TimeWindows.of(Duration.ofMinutes(2))).count();
+        KTable<String, String> twoMonth = aux.toStream((wk, v) -> wk.key()).map((k,v) -> new KeyValue<>(k,String.valueOf(v))).toTable();
+
+        //twoMonth.toStream().foreach((k,v) -> System.out.println("TwoMonth->"+k+v));
+
+        KTable<String, String> noPayments = userTable.outerJoin(twoMonth, (v1,v2) -> {
+            if(v1 == null){
+                return v2;
+            }else if(v2 == null){
+                return "0";
+            }
+            return "1";
         });
+        noPayments.mapValues((k,v) -> "{\"schema\":{\"type\":\"struct\",\"fields\":[{\"type\":\"double\",\"optional\":false,\"field\":\"payments\"},{\"type\":\"string\",\"optional\":false,\"field\":\"client_email\"}],\"optional\":false},\"payload\":{\"payments\":" + Double.parseDouble(v) + ",\"client_email\":\""+k+"\"}}"
+        ).toStream().to("two_month_payments");
 
         //Manager revenue
         //pagamentos.toStream();
 
 
         org.apache.kafka.streams.KafkaStreams streams = new org.apache.kafka.streams.KafkaStreams(builder.build(), props);
-        try {
-            streams.cleanUp();
-            streams.start();
-            consumer = new ListConsumer();
-            consumer.start();
-        }catch (Exception e){
-            System.exit(1);
-        }
+
+
+        streams.cleanUp();
+        streams.start();
+
+        consumer = new ListConsumer();
+        consumer.start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                streams.close();
+                consumer.close();
+            }
+        }));
 
     }
 

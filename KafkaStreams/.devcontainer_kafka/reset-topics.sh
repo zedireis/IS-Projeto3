@@ -14,6 +14,10 @@
 
 /opt/kafka_2.12-2.8.1/bin/kafka-topics.sh --delete --zookeeper localhost:2181 --topic last_month_bill
 
+/opt/kafka_2.12-2.8.1/bin/kafka-topics.sh --delete --zookeeper localhost:2181 --topic two_month_payments
+
+/opt/kafka_2.12-2.8.1/bin/kafka-topics.sh --delete --zookeeper localhost:2181 --topic manager_revenue
+
 /opt/kafka_2.12-2.8.1/bin/kafka-topics.sh --delete --zookeeper localhost:2181 --topic mytopic
 
 curl -X POST http://localhost:8083/connectors/jdbc-sink-filipe/tasks/0/restart
