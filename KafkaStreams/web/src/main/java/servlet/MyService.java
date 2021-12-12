@@ -25,7 +25,6 @@ public class MyService {
     @Path("/addManager")
     @Consumes(MediaType.APPLICATION_JSON)
     public String method1(Manager manager) {
-        System.out.println("ENTREI AQUI");
         try {
             db.addManager(manager.getEmail(), manager.getName());
             return "Adicionado";
@@ -35,17 +34,29 @@ public class MyService {
         return "Falhou";
     }
 
-    @GET
-    @Path("/person2")
-    public Person method2(@QueryParam("name") String value) {
-        System.out.println("M2 executing... args=" + value);
-        return new Person(value, 20);
+    @POST
+    @Path("/addClient")
+    public String methodAddClient(Client client) {
+        try {
+            db.addClient(client.getName(), client.getEmail(), client.getManager_email());
+            return "Cliente Adicionado";
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return "Cliente Falhou";
     }
-    @GET
-    @Path("/person3/{name}")
-    public Person method3(@PathParam("name") String value) {
-        System.out.println("M3 executing... args=" + value);
-        return new Person(value, 30);
+
+    @POST
+    @Path("/addCurrency")
+    public String methodAddCurrency(Currency currency) {
+        try {
+            System.out.println("[MY SERVICE]: " + currency.getName() + "    "  + currency.getConversion());
+            db.addCurrency(currency.getName(), currency.getConversion());
+            return "Currency Adicionado";
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return "Currency Falhou";
     }
     @POST
     @Path("/person4")
