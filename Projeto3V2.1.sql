@@ -77,6 +77,6 @@ BEGIN
 END;
 $$;
 
-CREATE TRIGGER update_customer_bill BEFORE UPDATE ON last_month_bill FOR EACH ROW EXECUTE PROCEDURE  add_timestamp();
-CREATE TRIGGER update_customer_payments BEFORE UPDATE ON two_month_payments FOR EACH ROW EXECUTE PROCEDURE  add_timestamp();
+CREATE TRIGGER update_customer_bill BEFORE INSERT OR UPDATE ON last_month_bill FOR EACH ROW EXECUTE PROCEDURE  add_timestamp();
+CREATE TRIGGER update_customer_payments BEFORE INSERT OR UPDATE ON two_month_payments FOR EACH ROW EXECUTE PROCEDURE  add_timestamp();
 
