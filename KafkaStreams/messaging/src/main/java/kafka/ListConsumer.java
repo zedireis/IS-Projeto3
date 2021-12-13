@@ -30,6 +30,7 @@ public class ListConsumer extends Thread{
         props2.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaClientConsumer");
         props2.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props2.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props2.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         //consumer topic currency
         props3 = new Properties();
@@ -42,6 +43,7 @@ public class ListConsumer extends Thread{
         props3.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaCurrencyConsumer2");
         props3.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props3.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props3.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
     }
 
     @Override
@@ -60,7 +62,7 @@ public class ListConsumer extends Thread{
 
         String email, manager_email, moeda;
         Double conversion;
-        Integer sleep_time = 5000;
+        Integer sleep_time = 500;
 
         JSONObject currency, client;
 
@@ -109,8 +111,9 @@ public class ListConsumer extends Thread{
     }
 
     public String getManager(String cliente){
+        //System.out.println(clients_list.toString());
         if(clients_list.containsKey(cliente)) {
-            return currency_list.get(cliente).toString();
+            return clients_list.get(cliente).toString();
         }else{
             return null;
         }
@@ -118,6 +121,7 @@ public class ListConsumer extends Thread{
 
     public Double getConversion(String money){
         //System.out.println("AQUI: " + currency_list.toString());
+        //System.out.println(currency_list.toString());
         if(currency_list.containsKey(money)) {
             return currency_list.get(money).doubleValue();
         }else{

@@ -40,7 +40,7 @@ public class MyService {
     @Path("/addClient")
     public String methodAddClient(Client client) {
         try {
-            db.addClient(client.getName(), client.getEmail(), client.getManager_email());
+            db.addClient(client.getEmail(),client.getName(), client.getManager_email());
             return "Cliente Adicionado\n";
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -181,14 +181,24 @@ public class MyService {
         return Response.ok().entity(list).build();
     }
 
+    @GET
+    @Path("/getLast2WithoutPayments")
+    //@Produces(MediaType.APPLICATION_JSON)
+    public Response method15() throws SQLException {
+        // List<Client_credit> list = db.creditPerClient();
+        List<String> list = db.getLast2WithoutPayments();
 
 
+        return Response.ok().entity(list).build();
+    }
 
-
-
-
-
-
-
+    @GET
+    @Path("/getHighestRevenue")
+    //@Produces(MediaType.APPLICATION_JSON)
+    public Response method16() throws SQLException {
+        // List<Client_credit> list = db.creditPerClient();
+        String result = db.getHighestRevenue();
+        return Response.ok().entity(result).build();
+    }
 
 }

@@ -1,6 +1,7 @@
-servlet/ApplicationConfig.class
-pojo/Manager.class
+pojo/Currency.class
+servlet/MyService$1.class
 pojo/Client.class
 servlet/ConnectDB.class
-pojo/Person.class
+servlet/ApplicationConfig.class
+pojo/Manager.class
 servlet/MyService.class

@@ -3,6 +3,7 @@ streams/KafkaStreams.class
 kafka/ListConsumer.class
 streams/Teste.class
 book/App.class
+kafka/Client$1.class
 kafka/SimpleConsumer.class
 streams/SimpleStreamsExercisesb.class
 kafka/Client.class

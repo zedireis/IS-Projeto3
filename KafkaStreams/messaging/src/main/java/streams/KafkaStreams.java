@@ -6,8 +6,10 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.*;
+import org.apache.kafka.streams.kstream.internals.KTableAggregate;
 import org.json.JSONObject;
 
+import javax.print.attribute.standard.JobKOctets;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -70,16 +72,18 @@ public class KafkaStreams {
         ).toStream().to("balance");
 
 
+
+
         //Soma de todos os pagamentos
-        KTable<String, String> totalPayments = pagamentos.toStream().selectKey((k,v) -> "pagamentos").groupByKey().reduce((v1, v2) -> {
+        KTable<String, String> totalPayments = payments.selectKey((k,v) -> "pagamentos").groupByKey().reduce((v1, v2) -> {
+            //System.out.println("Total payments->"+v1+v2);
             return "{\"amount\":\"" + (get_amount(v1) + get_amount(v2)) + "\",\"currency\":\"EUR\"}";
         });
         totalPayments.mapValues((k,v) -> "{\"schema\":{\"type\":\"struct\",\"fields\":[{\"type\":\"double\",\"optional\":false,\"field\":\"amount\"},{\"type\":\"string\",\"optional\":false,\"field\":\"client_email\"}],\"optional\":false},\"payload\":{\"amount\":" + get_amount(v) + ",\"client_email\":\"pagamentos\"}}"
         ).toStream().to("total");
 
-
         //Soma de todos os creditos
-        KTable<String, String> totalCredits = creditos.toStream().selectKey((k,v) -> "creditos").groupByKey().reduce((v1, v2) -> {
+        KTable<String, String> totalCredits = credits.selectKey((k,v) -> "creditos").groupByKey().reduce((v1, v2) -> {
             return "{\"amount\":\"" + (get_amount(v1) + get_amount(v2)) + "\",\"currency\":\"EUR\"}";
         });
         totalCredits.mapValues((k,v) -> "{\"schema\":{\"type\":\"struct\",\"fields\":[{\"type\":\"double\",\"optional\":false,\"field\":\"amount\"},{\"type\":\"string\",\"optional\":false,\"field\":\"client_email\"}],\"optional\":false},\"payload\":{\"amount\":" + get_amount(v) + ",\"client_email\":\"creditos\"}}"
@@ -123,7 +127,7 @@ public class KafkaStreams {
 
         KTable<String, Object> userTable = users.toTable();
 
-        KTable<Windowed<String>, Long> aux = payments.groupByKey().windowedBy(TimeWindows.of(Duration.ofMinutes(2))).count();
+        KTable<Windowed<String>, Long> aux = payments.groupByKey().windowedBy(TimeWindows.of(Duration.ofDays(60))).count();
         KTable<String, String> twoMonth = aux.toStream((wk, v) -> wk.key()).map((k,v) -> new KeyValue<>(k,String.valueOf(v))).toTable();
 
         //twoMonth.toStream().foreach((k,v) -> System.out.println("TwoMonth->"+k+v));
@@ -131,16 +135,22 @@ public class KafkaStreams {
         KTable<String, String> noPayments = userTable.outerJoin(twoMonth, (v1,v2) -> {
             if(v1 == null){
                 return v2;
-            }else if(v2 == null){
+            }
+            if(v2 == null){
                 return "0";
             }
-            return "1";
+            return v2;
         });
-        noPayments.mapValues((k,v) -> "{\"schema\":{\"type\":\"struct\",\"fields\":[{\"type\":\"double\",\"optional\":false,\"field\":\"payments\"},{\"type\":\"string\",\"optional\":false,\"field\":\"client_email\"}],\"optional\":false},\"payload\":{\"payments\":" + Double.parseDouble(v) + ",\"client_email\":\""+k+"\"}}"
+        noPayments.mapValues((k,v) -> "{\"schema\":{\"type\":\"struct\",\"fields\":[{\"type\":\"double\",\"optional\":false,\"field\":\"amount\"},{\"type\":\"string\",\"optional\":false,\"field\":\"client_email\"}],\"optional\":false},\"payload\":{\"amount\":" + Double.parseDouble(v) + ",\"client_email\":\""+k+"\"}}"
         ).toStream().to("two_month_payments");
 
         //Manager revenue
-        //pagamentos.toStream();
+        KTable<String, String> managerCredits = payments.selectKey((k,v) -> get_manager((String) k)).groupByKey().reduce((v1, v2) -> {
+            return "{\"amount\":\"" + (get_amount(v1) + get_amount(v2)) + "\",\"currency\":\"EUR\"}";
+        });
+
+        managerCredits.mapValues((k,v) -> "{\"schema\":{\"type\":\"struct\",\"fields\":[{\"type\":\"double\",\"optional\":false,\"field\":\"amount\"},{\"type\":\"string\",\"optional\":false,\"field\":\"client_email\"}],\"optional\":false},\"payload\":{\"amount\":" + get_amount(v) + ",\"client_email\":\"" + k + "\"}}"
+        ).toStream().to("manager_revenue");
 
 
         org.apache.kafka.streams.KafkaStreams streams = new org.apache.kafka.streams.KafkaStreams(builder.build(), props);
@@ -180,8 +190,8 @@ public class KafkaStreams {
     }
 
     public static String get_manager(String record){
-        JSONObject obj = new JSONObject(record).getJSONObject("payload");;
-        String email = obj.getString("manager_email");
+        //System.out.println("AQUI->"+record);
+        String email = consumer.getManager(record);
         return email;
     }
 

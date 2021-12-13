@@ -44,6 +44,6 @@ public class Client{
     }
 
     public String toString(){
-        return "Name: " + this.name + " " + "email: " + this.email + "Manager email:" + this.manager_email;
+        return "Name: " + this.name + " " + "email: " + this.email + " Manager email:" + this.manager_email;
     }
 }

@@ -51,6 +51,7 @@ public class Client {
         props2.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaExampleConsumer");
         props2.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props2.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props2.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         //consumer topic currency
         Properties props3 = new Properties();
@@ -63,6 +64,7 @@ public class Client {
         props3.put(ConsumerConfig.GROUP_ID_CONFIG, "KafkaCurrencyConsumer");
         props3.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props3.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props3.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         Producer<String, String> producer = new KafkaProducer<>(props);
 
@@ -77,6 +79,14 @@ public class Client {
 
         consumerCurrency.poll(0);
         consumerCurrency.seekToBeginning(consumerCurrency.assignment());
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                consumerClients.close();
+                consumerCurrency.close();
+            }
+        }));
 
         while(true){
 

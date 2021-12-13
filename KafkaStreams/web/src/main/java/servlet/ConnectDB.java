@@ -25,10 +25,12 @@ public class ConnectDB {
     String CURRENT_BALANCE = "SELECT * FROM balance WHERE client_email = ?";
     String TOTAL_CREDITS = "SELECT SUM(amount) FROM client_credits";
     String TOTAL_PAYMENTS = "SELECT SUM(amount) FROM client_payments";
-    String TOTAL_BALANCE = "SELECT * FROM total";
+    String TOTAL_BALANCE = "SELECT SUM(amount) FROM balance";
 
     String MOST_NEGATIVE_BALANCE = "SELECT client.email, client.nome, client.manager_email, balance.amount from client inner join balance on client.email = balance.client_email and balance.amount in(select min(amount) from balance);";
-    String LAST_MONTH_BILL = "SELECT amount, client_email from last_month_bill";
+    String LAST_MONTH_BILL = "SELECT amount, client_email from last_month_bill where modified > current_date - interval '1 month'";
+    String LAST_2MONTH_WITHOUTPAYMENTS = "SELECT client.email, client.nome from client where client.email not in (select client_email from two_month_payments where amount > 0 and modified > current_date - interval '2 month')";
+    String HIGHEST_REVENUE_MANAGER = "SELECT manager.email, manager.nome,  manager_revenue.amount from manager inner join manager_revenue on manager.email = manager_revenue.client_email and manager_revenue.amount in(select max(amount) from manager_revenue)";
     public ConnectDB() {
         try {
             Class.forName("org.postgresql.Driver");
@@ -145,9 +147,6 @@ public class ConnectDB {
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery( CREDIT_PER_CLIENT);
         String result = "Sem creditos";
-        if(!rs.next()){
-            list.add(result);
-        }
 
         while ( rs.next() ){
             Double amount = rs.getDouble("amount");
@@ -175,9 +174,7 @@ public class ConnectDB {
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery( PAYMENT_PER_CLIENT);
         String result = "Sem Payments";
-        if(!rs.next()){
-            list.add(result);
-        }
+
         while ( rs.next() ){
             Double amount = rs.getDouble("amount");
             System.out.println("[WHILE]: " + amount);
@@ -281,9 +278,7 @@ public class ConnectDB {
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery( MOST_NEGATIVE_BALANCE);
         String result = "Sem clientes";
-        if(!rs.next()){
-            list.add(result);
-        }
+
         while ( rs.next() ){
             String nome = rs.getString("nome");
             System.out.println("[WHILE]: " + nome);
@@ -312,9 +307,7 @@ public class ConnectDB {
         ResultSet rs = stmt.executeQuery(LAST_MONTH_BILL);
         List<String> list = new ArrayList<String>();
         String result = "Sem clientes";
-        if(!rs.next()){
-            list.add(result);
-        }
+
         while ( rs.next() ){
             Double amount = rs.getDouble("amount");
             System.out.println("[WHILE]: " + amount);
@@ -333,13 +326,54 @@ public class ConnectDB {
     }
 
 
+    public List<String> getLast2WithoutPayments() throws SQLException {
 
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(LAST_2MONTH_WITHOUTPAYMENTS);
+        List<String> list = new ArrayList<String>();
+        String result = "Sem clientes";
 
+        while ( rs.next() ){
+            String nome = rs.getString("nome");
+            System.out.println("[WHILE]: " + nome);
 
+            String client_email = rs.getString("email");
+            System.out.println("[WHILE]: " + client_email);
+            result = "Client: " + client_email + " Nome: "+ nome;
+            list.add(result);
+        }
 
+        rs.close();
+        stmt.close();
+        conn.close();
+        return list;
 
+    }
 
+    public String getHighestRevenue() throws SQLException {
 
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(HIGHEST_REVENUE_MANAGER);
+        String result = "Sem clientes";
+
+        while ( rs.next() ){
+            String email = rs.getString("email");
+            System.out.println("[WHILE]: " + email);
+
+            String nome = rs.getString("nome");
+            System.out.println("[WHILE]: " + nome);
+
+            Double amount = rs.getDouble("amount");
+            System.out.println("[WHILE]: " + amount);
+            result = "Manager: " + nome + " Nome: " + nome + " Revenue: " + amount;
+        }
+
+        rs.close();
+        stmt.close();
+        conn.close();
+        return result;
+
+    }
 
 
 

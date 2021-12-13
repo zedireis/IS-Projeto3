@@ -94,8 +94,16 @@ public class App {
                     getLastMonthBill();
                     break;
 
+                case 14:
+                    getLast2WithoutPayments();
+                    break;
+
                 case 15:
                     getMostNegativeCurrentBalance();
+                    break;
+
+                case 16:
+                    getHighestRevenue();
                     break;
 
                 default:
@@ -113,10 +121,10 @@ public class App {
 
         System.out.println("Name: ");
         Scanner managerName = new Scanner(System.in);
-        System.out.println("Email: ");
         Scanner managerEmail = new Scanner(System.in);
 
         String manName = managerName.nextLine();
+        System.out.println("Email: ");
         String manEmail = managerEmail.nextLine();
 
         if (!manName.isEmpty() && manName.length() != 0 && !manEmail.isEmpty() && manEmail.length() != 0) {
@@ -178,10 +186,10 @@ public class App {
 
         System.out.println("Name: ");
         Scanner currencyName = new Scanner(System.in);
-        System.out.println("Conversion: ");
         Scanner currencyConversion = new Scanner(System.in);
 
         String cuName = currencyName.nextLine();
+        System.out.println("Conversion: ");
         String cuConversion = currencyConversion.nextLine();
 
         System.out.println("OUTPUTS: " + cuName + "    " + cuConversion );
@@ -376,7 +384,7 @@ public class App {
     }
 
     private static void getLastMonthBill() throws URISyntaxException{
-        System.out.println("HIGHEST OUTSTANDING DEBT\n");
+        System.out.println("LastMonthBill\n");
         javax.ws.rs.client.Client client = ClientBuilder.newClient();
         WebTarget target = client.target(new URI("http://wildfly:8080/web/rest/myservice/getLastMonthBill"));
 
@@ -391,8 +399,36 @@ public class App {
         response.close();
     }
 
+    private static void getLast2WithoutPayments() throws URISyntaxException{
+        System.out.println("CLIENTS WITHOUT PAYMENTS FOR THE LAST TWO MONTHS\n");
+        javax.ws.rs.client.Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(new URI("http://wildfly:8080/web/rest/myservice/getLast2WithoutPayments"));
 
+        Response response = target.request().get();
+        List<String> result = response.readEntity(new GenericType<List<String>>() {});
 
+        for(int i = 0; i < result.size(); i++){
+            System.out.println(result.get(i));
+        }
+        response.close();
+        System.out.println("\n------------------------------------------------\n\n");
+        response.close();
+    }
+
+    private static void getHighestRevenue() throws URISyntaxException{
+        System.out.println("HIGHEST REVENUE MANAGER\n");
+        javax.ws.rs.client.Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(new URI("http://wildfly:8080/web/rest/myservice/getHighestRevenue"));
+
+        Response response = target.request().get();
+        String result = response.readEntity(new GenericType<String>() {});
+
+        System.out.println(result);
+
+        response.close();
+        System.out.println("\n------------------------------------------------\n\n");
+        response.close();
+    }
 
     public static void main(String[] args) {
         try {

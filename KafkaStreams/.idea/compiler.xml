@@ -17,9 +17,9 @@
       <module name="jpa" target="1.7" />
       <module name="KafkaStreams" target="16" />
       <module name="messaging" target="1.7" />
-      <module name="restclient" target="16" />
+      <module name="restclient" target="1.7" />
       <module name="restws" target="1.7" />
-      <module name="web" target="16" />
+      <module name="web" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>
